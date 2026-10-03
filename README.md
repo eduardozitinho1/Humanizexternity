@@ -64,6 +64,7 @@ Notes:
 - Data uses 1024-based scaling by default (`1 KB = 1024 B`). Set `DecimalMode.Metric` for SI-style 1000-based scaling.
 - Time is formatted with compound notation (`"1 h 30 min 5 s"`) because time units are not powers of ten.
 - Centiliter (`cl`) is accepted by the parser and available via `Volume.FromCentiliters`, but it is not picked by auto unit selection. Everyday output prefers `500 ml` over `50 cl`.
+- Zero always renders in the base unit: `Mass.FromGrams(0)` prints `"0 g"`, not `"0 mg"`.
 
 ## Typed measures
 
@@ -109,7 +110,7 @@ H.Best(1.5, Dimension.Volume);        // "1.5 l"
 H.Best(10_000, Dimension.Area);       // "1 ha"
 ```
 
-The selector walks the units of the dimension from largest to smallest and returns the first one whose factor fits. Values smaller than the smallest unit fall back to the smallest unit, so nothing throws for perfectly valid small numbers.
+The selector walks the units of the dimension from largest to smallest and returns the first one whose factor fits. Values smaller than the smallest unit fall back to the smallest unit, so nothing throws for perfectly valid small numbers. Zero always uses the base unit of its dimension.
 
 ## Parsing
 
@@ -132,6 +133,20 @@ Accepted forms:
 - Case-insensitive symbols: `"gb"`, `"GB"`, `"Gb"`.
 - Full names and aliases: `"kilogram"`, `"kilos"`, `"hr"`, `"squaremeter"`.
 - Comma or dot as decimal separator: `"1,5"`, `"1.5"`.
+- Compound durations: `"1h30min"`, `"1 h 30 min"`, `"1h30m45s"`.
+- Colon durations: `"1:30"` (mm:ss), `"1:30:45"` (hh:mm:ss).
+
+Compound and colon durations are normalized to seconds, so the resulting `Measure` always carries `Unit = s`:
+
+```csharp
+H.Parse("1h30min").ToBase();   // 5400
+H.Parse("1:30").ToBase();      // 90
+H.Parse("1:30:45").ToBase();   // 5445
+```
+
+In compound durations, the symbol `"m"` is interpreted as minutes rather than meters, since minutes are the only reasonable meaning in that context. In single-unit parsing, `"m"` resolves to meters as expected.
+
+Non-finite input is preserved in output. `double.NaN` renders as `"NaN"`, positive infinity as `"∞"`, and negative infinity as `"-∞"`. Zero always renders in the base unit, so `Mass.FromGrams(0)` prints `"0 g"` rather than `"0 mg"`.
 
 `H.TryParse` is also available if you prefer a boolean over an exception:
 
