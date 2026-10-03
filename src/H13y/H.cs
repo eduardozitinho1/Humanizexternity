@@ -7,7 +7,8 @@ namespace H13y;
 /// </summary>
 /// <remarks>
 /// This is the entry point most users reach for. It exposes one method per dimension plus
-/// generic helpers for auto-selecting a unit and parsing strings.
+/// generic helpers for auto-selecting a unit and parsing strings. Temperature is exposed
+/// through three methods (one per scale) because auto unit selection does not apply to it.
 /// </remarks>
 public static class H
 {
@@ -35,7 +36,22 @@ public static class H
     public static string SquareMeters(double squareMeters, HumanizeOptions? options = null)
         => Area.FromSquareMeters(squareMeters).Humanize(options);
 
-    /// <summary>Picks the best unit for the given base value and dimension, then formats it.</summary>
+    /// <summary>Humanizes a temperature given in degrees Celsius.</summary>
+    public static string Celsius(double celsius, HumanizeOptions? options = null)
+        => Temperature.FromCelsius(celsius).Humanize(TemperatureScale.Celsius, options);
+
+    /// <summary>Humanizes a temperature given in degrees Fahrenheit.</summary>
+    public static string Fahrenheit(double fahrenheit, HumanizeOptions? options = null)
+        => Temperature.FromFahrenheit(fahrenheit).Humanize(TemperatureScale.Fahrenheit, options);
+
+    /// <summary>Humanizes a temperature given in kelvin.</summary>
+    public static string Kelvin(double kelvin, HumanizeOptions? options = null)
+        => Temperature.FromKelvin(kelvin).Humanize(TemperatureScale.Kelvin, options);
+
+    /// <summary>
+    /// Picks the best unit for the given base value and dimension, then formats it.
+    /// </summary>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="dimension"/> is <see cref="Dimension.Temperature"/>.</exception>
     public static string Best(double baseValue, Dimension dimension, HumanizeOptions? options = null)
         => HumanizeFormatter.Format(baseValue, dimension, options);
 

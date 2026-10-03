@@ -7,26 +7,24 @@ namespace H13y;
 /// Two formatting strategies are provided:
 ///
 /// <list type="bullet">
-///   <item><description><see cref="Format"/> — for scalar dimensions. Picks a single best unit and prints the value with that unit.</description></item>
+///   <item><description><see cref="Format"/> — for scalar dimensions (data, mass, length, time, volume, area). Picks a single best unit and prints the value with that unit.</description></item>
 ///   <item><description><see cref="FormatDuration"/> — for time, using compound notation because time units are not powers of ten.</description></item>
 /// </list>
 ///
+/// Temperature is handled separately by <see cref="TemperatureFormatter"/> because its units
+/// are affine, not linear. Passing <see cref="Dimension.Temperature"/> to <see cref="Format"/>
+/// throws with a clear message.
+///
 /// Non-finite inputs are handled explicitly: <see cref="double.NaN"/> returns "NaN",
-/// positive infinity returns "∞", and negative infinity returns "-∞". These match the
-/// invariant-culture conventions used by .NET and avoid producing garbage when the
-/// best-unit selector is given values it cannot compare.
+/// positive infinity returns "∞", and negative infinity returns "-∞".
 /// </remarks>
 public static class HumanizeFormatter
 {
     /// <summary>
     /// Formats a value (already in the dimension's base unit) into a human-readable string.
     /// </summary>
-    /// <param name="baseValue">The value expressed in the base unit of <paramref name="dimension"/>.</param>
-    /// <param name="dimension">The dimension to use when selecting the best unit.</param>
-    /// <param name="options">Optional formatting options.</param>
-    /// <returns>A compact string such as "1 GB" or "1.5 kg".</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="baseValue"/> is negative and finite.</exception>
-    /// <exception cref="ArgumentException">Thrown when the dimension has no registered units.</exception>
+    /// <exception cref="ArgumentException">Thrown when the dimension has no registered units or is <see cref="Dimension.Temperature"/>.</exception>
     public static string Format(double baseValue, Dimension dimension, HumanizeOptions? options = null)
     {
         if (double.IsNaN(baseValue)) return "NaN";
@@ -42,11 +40,7 @@ public static class HumanizeFormatter
         return Combine(value, unit.Symbol, opts);
     }
 
-    /// <summary>
-    /// Formats a duration in seconds using compound notation (for example, "1 h 30 min 5 s").
-    /// </summary>
-    /// <param name="seconds">The duration in seconds.</param>
-    /// <param name="options">Optional formatting options.</param>
+    /// <summary>Formats a duration in seconds using compound notation.</summary>
     public static string FormatDuration(double seconds, HumanizeOptions? options = null)
     {
         if (double.IsNaN(seconds)) return "NaN";
@@ -98,7 +92,11 @@ public static class HumanizeFormatter
             : Combine(weeks, "w", opts);
     }
 
-    private static string Combine(double value, string symbol, HumanizeOptions options)
+    /// <summary>
+    /// Joins a numeric value and a unit symbol, respecting the spacing option. Shared with
+    /// <see cref="TemperatureFormatter"/> so both produce identical formatting.
+    /// </summary>
+    internal static string Combine(double value, string symbol, HumanizeOptions options)
     {
         var number = NumberFormatter.Format(value, options.MaxDecimals, options.Culture);
         return options.SpaceBetweenValueAndUnit
