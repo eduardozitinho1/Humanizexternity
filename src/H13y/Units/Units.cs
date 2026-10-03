@@ -8,11 +8,6 @@ namespace H13y;
 /// <see cref="BestUnitSelector"/> and <see cref="UnitAliases"/> have one place to look.
 /// The registry is built once at type initialization and never mutated afterwards,
 /// which makes it safe to enumerate from multiple threads.
-///
-/// To add a new dimension, create a new partial file next to the existing ones
-/// (for example, <c>VolumeUnits.cs</c>) and append its units to <see cref="AllUnits"/>.
-/// The library intentionally keeps additions here so third-party extensions can
-/// follow the same pattern.
 /// </remarks>
 public static partial class Units
 {
@@ -22,11 +17,11 @@ public static partial class Units
         .. Mass.All,
         .. Length.All,
         .. Time.All,
+        .. Volume.All,
+        .. Area.All,
     ];
 
-    /// <summary>
-    /// Gets every unit registered in the library, across all dimensions.
-    /// </summary>
+    /// <summary>Gets every unit registered in the library, across all dimensions.</summary>
     public static IReadOnlyList<Unit> All => AllUnits;
 
     /// <summary>

@@ -7,27 +7,24 @@ namespace H13y;
 /// Parses human-readable strings into <see cref="Measure"/> values.
 /// </summary>
 /// <remarks>
-/// The parser accepts strings like "1 GB", "1.5 KB", "500 B", "1,5 kg" (using a comma as
-/// the decimal separator), and "1500 g". Whitespace between the number and the unit is
-/// optional, so "1GB" is accepted as well.
+/// The parser accepts strings like "1 GB", "1.5 KB", "500 B", "1,5 kg", "1500 g", "500 ml",
+/// and "1 m3". Whitespace between the number and the unit is optional, so "1GB" is accepted.
 ///
-/// Parsing is intentionally strict: unknown unit symbols throw <see cref="FormatException"/>
-/// rather than being silently ignored. Use <see cref="TryParse"/> when you prefer a boolean
-/// result over an exception.
+/// Unit symbols may contain digits (for example "m3", "m2", "km2") which is why the
+/// unit pattern allows <c>[A-Za-z0-9]+</c>.
+///
+/// Parsing is intentionally strict: unknown unit symbols throw <see cref="FormatException"/>.
+/// Use <see cref="TryParse"/> when you prefer a boolean result over an exception.
 /// </remarks>
 public static class UnitParser
 {
     private static readonly Regex Pattern = new(
-        @"^(?<value>[-+]?\d+(?:[.,]\d+)?)\s*(?<unit>[A-Za-z]+)?$",
+        @"^(?<value>[-+]?\d+(?:[.,]\d+)?)\s*(?<unit>[A-Za-z0-9]+)?$",
         RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
     /// <summary>
     /// Parses a human-readable string such as "1.5 kg" into a <see cref="Measure"/>.
     /// </summary>
-    /// <param name="text">The input string to parse. Must contain a number, optionally followed by a unit symbol.</param>
-    /// <returns>A <see cref="Measure"/> with the parsed value and unit.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
-    /// <exception cref="FormatException">Thrown when the input is empty, malformed, or uses an unknown unit.</exception>
     public static Measure Parse(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
@@ -54,9 +51,6 @@ public static class UnitParser
     /// <summary>
     /// Attempts to parse a human-readable string into a <see cref="Measure"/> without throwing.
     /// </summary>
-    /// <param name="text">The input string to parse.</param>
-    /// <param name="measure">Receives the parsed measure on success, or the default value on failure.</param>
-    /// <returns><c>true</c> if parsing succeeded; otherwise <c>false</c>.</returns>
     public static bool TryParse(string text, out Measure measure)
     {
         try
