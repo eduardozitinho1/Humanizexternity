@@ -7,21 +7,18 @@ namespace H13y.Json;
 /// Provides ready-to-use <see cref="JsonSerializerOptions"/> with every H13y converter registered.
 /// </summary>
 /// <remarks>
-/// Use this when you want to serialize or deserialize measures without registering each
-/// converter by hand. The options instance is cached and thread-safe.
+/// The options instance is cached and thread-safe.
 ///
 /// <code>
-/// var json = JsonSerializer.Serialize(Mass.FromKilograms(1.5), H13yJson.Options);
-/// // "1500"
+/// var json = JsonSerializer.Serialize(Temperature.FromCelsius(25), H13yJson.Options);
+/// // "298.15"
 ///
-/// var mass = JsonSerializer.Deserialize&lt;Mass&gt;("1500", H13yJson.Options);
+/// var temp = JsonSerializer.Deserialize&lt;Temperature&gt;("298.15", H13yJson.Options);
 /// </code>
 /// </remarks>
 public static class H13yJson
 {
-    /// <summary>
-    /// Shared <see cref="JsonSerializerOptions"/> with all H13y converters registered.
-    /// </summary>
+    /// <summary>Shared <see cref="JsonSerializerOptions"/> with all H13y converters registered.</summary>
     public static JsonSerializerOptions Options { get; } = Create();
 
     private static JsonSerializerOptions Create()
@@ -34,6 +31,7 @@ public static class H13yJson
         options.Converters.Add(new DurationConverter());
         options.Converters.Add(new VolumeConverter());
         options.Converters.Add(new AreaConverter());
+        options.Converters.Add(new TemperatureConverter());
         return options;
     }
 }
