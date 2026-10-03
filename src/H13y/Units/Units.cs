@@ -19,16 +19,13 @@ public static partial class Units
         .. Time.All,
         .. Volume.All,
         .. Area.All,
+        .. Temperature.All,
     ];
 
     /// <summary>Gets every unit registered in the library, across all dimensions.</summary>
     public static IReadOnlyList<Unit> All => AllUnits;
 
-    /// <summary>
-    /// Enumerates all units that belong to a given dimension.
-    /// </summary>
-    /// <param name="dimension">The dimension to filter by.</param>
-    /// <returns>An enumerable of units whose <see cref="Unit.Dimension"/> matches <paramref name="dimension"/>.</returns>
+    /// <summary>Enumerates all units that belong to a given dimension.</summary>
     public static IEnumerable<Unit> ByDimension(Dimension dimension)
         => AllUnits.Where(u => u.Dimension == dimension);
 }

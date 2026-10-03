@@ -10,22 +10,18 @@ namespace H13y;
 /// Three input shapes are supported, tried in this order:
 ///
 /// <list type="number">
-///   <item><description><b>Compound duration</b> — "1h30min", "1 h 30 min", "1h30m45s". Requires two or more value+unit pairs and every unit must belong to the Time dimension. The result is normalized to seconds.</description></item>
-///   <item><description><b>Colon duration</b> — "1:30" (mm:ss), "1:30:45" (hh:mm:ss). Always normalized to seconds.</description></item>
-///   <item><description><b>Single value + unit</b> — "1 GB", "1.5 kg", "1 m3". Result keeps the parsed unit as-is.</description></item>
+///   <item><description><b>Compound duration</b> — "1h30min", "1 h 30 min", "1h30m45s".</description></item>
+///   <item><description><b>Colon duration</b> — "1:30" (mm:ss), "1:30:45" (hh:mm:ss).</description></item>
+///   <item><description><b>Single value + unit</b> — "1 GB", "25 °C", "1 m3".</description></item>
 /// </list>
 ///
-/// In compound durations the symbol "m" is interpreted as minutes rather than meters, since
-/// minutes are the only reasonable meaning in that context. In single-unit parsing, "m"
-/// resolves to meters as expected.
-///
-/// Parsing is intentionally strict: unknown unit symbols throw <see cref="FormatException"/>.
-/// Use <see cref="TryParse"/> when you prefer a boolean result over an exception.
+/// The single-unit pattern accepts the degree symbol so temperature strings such as "25 °C"
+/// parse correctly.
 /// </remarks>
 public static class UnitParser
 {
     private static readonly Regex SinglePattern = new(
-        @"^(?<value>[-+]?\d+(?:[.,]\d+)?)\s*(?<unit>[A-Za-z0-9]+)?$",
+        @"^(?<value>[-+]?\d+(?:[.,]\d+)?)\s*(?<unit>[°A-Za-z0-9]+)?$",
         RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
     private static readonly Regex CompoundPattern = new(
@@ -37,10 +33,8 @@ public static class UnitParser
         RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
     /// <summary>
-    /// Parses a human-readable string such as "1.5 kg" into a <see cref="Measure"/>.
+    /// Parses a human-readable string into a <see cref="Measure"/>.
     /// </summary>
-    /// <param name="text">The input string to parse.</param>
-    /// <returns>A <see cref="Measure"/> with the parsed value and unit.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
     /// <exception cref="FormatException">Thrown when the input is empty, malformed, or uses an unknown unit.</exception>
     public static Measure Parse(string text)
@@ -72,12 +66,7 @@ public static class UnitParser
         return new Measure(value, unit);
     }
 
-    /// <summary>
-    /// Attempts to parse a human-readable string into a <see cref="Measure"/> without throwing.
-    /// </summary>
-    /// <param name="text">The input string to parse.</param>
-    /// <param name="measure">Receives the parsed measure on success, or the default value on failure.</param>
-    /// <returns><c>true</c> if parsing succeeded; otherwise <c>false</c>.</returns>
+    /// <summary>Attempts to parse without throwing.</summary>
     public static bool TryParse(string text, out Measure measure)
     {
         try

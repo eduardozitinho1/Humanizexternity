@@ -4,20 +4,14 @@ namespace H13y;
 /// Resolves unit symbols and their aliases to the registered <see cref="Unit"/> instances.
 /// </summary>
 /// <remarks>
-/// Users type units in many different ways: "kg", "KG", "kilogram", "kilos". Rather than
-/// force a single canonical spelling, this class builds a lookup dictionary at startup
-/// that maps every accepted form to the same <see cref="Unit"/>.
-///
-/// The lookup is case-insensitive. When you add a new unit to <see cref="Units"/>, remember
-/// to add its aliases here so the parser can recognize user input.
+/// Users type units in many different ways: "kg", "KG", "kilogram", "kilos". The lookup is
+/// case-insensitive and both symbols and full English names are registered.
 /// </remarks>
 internal static class UnitAliases
 {
     private static readonly Dictionary<string, Unit> Map = BuildMap();
 
-    /// <summary>
-    /// Resolves a unit symbol or alias to its <see cref="Unit"/>, or returns <c>null</c> if unknown.
-    /// </summary>
+    /// <summary>Resolves a symbol or alias to its <see cref="Unit"/>, or returns <c>null</c> if unknown.</summary>
     public static Unit? Resolve(string symbol)
     {
         if (string.IsNullOrWhiteSpace(symbol))
@@ -77,6 +71,11 @@ internal static class UnitAliases
         Add(Units.Area.SquareMeter, "squaremeter", "squaremeters", "squaremetre", "squaremetres");
         Add(Units.Area.Hectare, "hectares");
         Add(Units.Area.SquareKilometer, "squarekilometer", "squarekilometers");
+
+        // Temperature
+        Add(Units.Temperature.Celsius, "c", "celsius", "centigrade", "°c");
+        Add(Units.Temperature.Fahrenheit, "f", "fahrenheit", "°f");
+        Add(Units.Temperature.Kelvin, "k", "kelvin");
 
         return map;
     }
