@@ -7,24 +7,42 @@ namespace H13y;
 /// Parses human-readable strings into <see cref="Measure"/> values.
 /// </summary>
 /// <remarks>
-/// The parser accepts strings like "1 GB", "1.5 KB", "500 B", "1,5 kg", "1500 g", "500 ml",
-/// and "1 m3". Whitespace between the number and the unit is optional, so "1GB" is accepted.
+/// Three input shapes are supported, tried in this order:
 ///
-/// Unit symbols may contain digits (for example "m3", "m2", "km2") which is why the
-/// unit pattern allows <c>[A-Za-z0-9]+</c>.
+/// <list type="number">
+///   <item><description><b>Compound duration</b> — "1h30min", "1 h 30 min", "1h30m45s". Requires two or more value+unit pairs and every unit must belong to the Time dimension. The result is normalized to seconds.</description></item>
+///   <item><description><b>Colon duration</b> — "1:30" (mm:ss), "1:30:45" (hh:mm:ss). Always normalized to seconds.</description></item>
+///   <item><description><b>Single value + unit</b> — "1 GB", "1.5 kg", "1 m3". Result keeps the parsed unit as-is.</description></item>
+/// </list>
+///
+/// In compound durations the symbol "m" is interpreted as minutes rather than meters, since
+/// minutes are the only reasonable meaning in that context. In single-unit parsing, "m"
+/// resolves to meters as expected.
 ///
 /// Parsing is intentionally strict: unknown unit symbols throw <see cref="FormatException"/>.
 /// Use <see cref="TryParse"/> when you prefer a boolean result over an exception.
 /// </remarks>
 public static class UnitParser
 {
-    private static readonly Regex Pattern = new(
+    private static readonly Regex SinglePattern = new(
         @"^(?<value>[-+]?\d+(?:[.,]\d+)?)\s*(?<unit>[A-Za-z0-9]+)?$",
+        RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
+    private static readonly Regex CompoundPattern = new(
+        @"^\s*(?:(?<value>\d+(?:[.,]\d+)?)\s*(?<unit>[A-Za-z]+)\s*){2,}$",
+        RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
+    private static readonly Regex ColonPattern = new(
+        @"^\s*(?<a>\d+):(?<b>\d{1,2})(?::(?<c>\d{1,2}))?\s*$",
         RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
     /// <summary>
     /// Parses a human-readable string such as "1.5 kg" into a <see cref="Measure"/>.
     /// </summary>
+    /// <param name="text">The input string to parse.</param>
+    /// <returns>A <see cref="Measure"/> with the parsed value and unit.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
+    /// <exception cref="FormatException">Thrown when the input is empty, malformed, or uses an unknown unit.</exception>
     public static Measure Parse(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
@@ -33,7 +51,13 @@ public static class UnitParser
         if (trimmed.Length == 0)
             throw new FormatException("Input is empty.");
 
-        var match = Pattern.Match(trimmed);
+        if (TryParseCompoundDuration(trimmed, out var compound))
+            return compound;
+
+        if (TryParseColonDuration(trimmed, out var colon))
+            return colon;
+
+        var match = SinglePattern.Match(trimmed);
         if (!match.Success)
             throw new FormatException($"Could not parse '{text}'.");
 
@@ -51,6 +75,9 @@ public static class UnitParser
     /// <summary>
     /// Attempts to parse a human-readable string into a <see cref="Measure"/> without throwing.
     /// </summary>
+    /// <param name="text">The input string to parse.</param>
+    /// <param name="measure">Receives the parsed measure on success, or the default value on failure.</param>
+    /// <returns><c>true</c> if parsing succeeded; otherwise <c>false</c>.</returns>
     public static bool TryParse(string text, out Measure measure)
     {
         try
@@ -63,5 +90,75 @@ public static class UnitParser
             measure = default;
             return false;
         }
+    }
+
+    private static bool TryParseCompoundDuration(string text, out Measure measure)
+    {
+        measure = default;
+        var match = CompoundPattern.Match(text);
+        if (!match.Success)
+            return false;
+
+        var valueCaptures = match.Groups["value"].Captures;
+        var unitCaptures = match.Groups["unit"].Captures;
+
+        if (valueCaptures.Count != unitCaptures.Count || valueCaptures.Count < 2)
+            return false;
+
+        double totalSeconds = 0;
+
+        for (int i = 0; i < valueCaptures.Count; i++)
+        {
+            var valueText = valueCaptures[i].Value.Replace(',', '.');
+            if (!double.TryParse(valueText, NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
+                return false;
+
+            var unit = ResolveTimeUnit(unitCaptures[i].Value);
+            if (unit is null)
+                return false;
+
+            totalSeconds += value * unit.Factor;
+        }
+
+        measure = new Measure(totalSeconds, Units.Time.Second);
+        return true;
+    }
+
+    private static bool TryParseColonDuration(string text, out Measure measure)
+    {
+        measure = default;
+        var match = ColonPattern.Match(text);
+        if (!match.Success)
+            return false;
+
+        if (!double.TryParse(match.Groups["a"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var a))
+            return false;
+        if (!double.TryParse(match.Groups["b"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var b))
+            return false;
+
+        if (match.Groups["c"].Success)
+        {
+            if (!double.TryParse(match.Groups["c"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var c))
+                return false;
+            measure = new Measure(a * 3600 + b * 60 + c, Units.Time.Second);
+        }
+        else
+        {
+            measure = new Measure(a * 60 + b, Units.Time.Second);
+        }
+
+        return true;
+    }
+
+    private static Unit? ResolveTimeUnit(string symbol)
+    {
+        var unit = UnitAliases.Resolve(symbol);
+        if (unit is not null && unit.Dimension == Dimension.Time)
+            return unit;
+
+        if (string.Equals(symbol, "m", StringComparison.OrdinalIgnoreCase))
+            return Units.Time.Minute;
+
+        return null;
     }
 }
