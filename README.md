@@ -44,6 +44,9 @@ H.Meters(0.005);                  // "5 mm"
 H.Seconds(3661);                  // "1 h 1 min 1 s"
 H.Liters(1.5);                    // "1.5 l"
 H.SquareMeters(10_000);           // "1 ha"
+H.Celsius(25);                    // "25 °C"
+H.Fahrenheit(77);                 // "77 °F"
+H.Kelvin(298.15);                 // "298.2 K"
 ```
 
 Every method is a thin wrapper over a strongly typed measure. If you need conversions, arithmetic, or serialization, use the typed records directly.
@@ -58,6 +61,7 @@ Every method is a thin wrapper over a strongly typed measure. If you need conver
 | Time      | second    | ms, s, min, h, d, w |
 | Volume    | liter     | ml, cl, l, m3 |
 | Area      | m²        | mm2, cm2, m2, ha, km2 |
+| Temperature | kelvin  | °C, °F, K |
 
 Notes:
 
@@ -111,6 +115,36 @@ H.Best(10_000, Dimension.Area);       // "1 ha"
 ```
 
 The selector walks the units of the dimension from largest to smallest and returns the first one whose factor fits. Values smaller than the smallest unit fall back to the smallest unit, so nothing throws for perfectly valid small numbers. Zero always uses the base unit of its dimension.
+
+
+## Temperature
+
+Temperature is the only affine dimension in the library, so it has its own entry point.
+
+```csharp
+using H13y.Measures;
+
+var t = Temperature.FromCelsius(25);
+t.ToFahrenheit();       // 77
+t.ToKelvin();           // 298.15
+t.Humanize();           // "25 °C"
+t.Humanize(TemperatureScale.Fahrenheit);  // "77 °F"
+
+H.Celsius(25);          // "25 °C"
+H.Fahrenheit(77);       // "77 °F"
+H.Kelvin(298.15);       // "298.2 K"
+```
+
+The parser accepts the degree symbol and short forms:
+
+```csharp
+H.Parse("25 °C").ToBase();  // 298.15  (kelvin, the base unit)
+H.Parse("77 °F").ToBase();  // 298.15
+H.Parse("0 K").ToBase();    // 0
+```
+
+Auto unit selection (`H.Best`) does not apply to temperature and throws a clear error if
+called with `Dimension.Temperature`. Use the scale-specific methods instead.
 
 ## Parsing
 
@@ -239,7 +273,7 @@ H.Bytes(1536, ptBr);                                  // "1,5 KB"
 
 - **No external dependencies.** The entire library builds on the BCL. It stays fast to restore, easy to audit, and safe for AOT scenarios.
 - **Immutable value types.** Every measure is a `readonly record struct`, which makes them thread-safe, cheap to copy, and easy to use in collections and dictionaries.
-- **One base unit per dimension.** All conversions go through the base unit (byte, gram, meter, second, liter, square meter). This keeps arithmetic exact and makes reasoning about values straightforward.
+- **One base unit per dimension.** All conversions go through the base unit (byte, gram, meter, second, liter, square meter, kelvin). This keeps arithmetic exact and makes reasoning about values straightforward.
 - **Predictable output.** Humanization always prefers the largest unit that fits, never produces trailing zeros, and never throws for valid positive values.
 - **Parsing that respects users.** Both comma and dot decimal separators are accepted, units are case-insensitive, and both symbols and full names work as input.
 
