@@ -3,15 +3,10 @@ namespace H13y;
 /// <summary>
 /// Resolves unit symbols and their aliases to the registered <see cref="Unit"/> instances.
 /// </summary>
-/// <remarks>
-/// Users type units in many different ways: "kg", "KG", "kilogram", "kilos". The lookup is
-/// case-insensitive and both symbols and full English names are registered.
-/// </remarks>
 internal static class UnitAliases
 {
     private static readonly Dictionary<string, Unit> Map = BuildMap();
 
-    /// <summary>Resolves a symbol or alias to its <see cref="Unit"/>, or returns <c>null</c> if unknown.</summary>
     public static Unit? Resolve(string symbol)
     {
         if (string.IsNullOrWhiteSpace(symbol))
@@ -27,17 +22,19 @@ internal static class UnitAliases
         void Add(Unit unit, params string[] aliases)
         {
             map[unit.Symbol] = unit;
+            if (unit.IecSymbol is not null)
+                map[unit.IecSymbol] = unit;
             foreach (var alias in aliases)
                 map[alias] = unit;
         }
 
         // Data
         Add(Units.Data.Byte, "byte", "bytes");
-        Add(Units.Data.Kilobyte, "kilobyte", "kilobytes");
-        Add(Units.Data.Megabyte, "megabyte", "megabytes");
-        Add(Units.Data.Gigabyte, "gigabyte", "gigabytes");
-        Add(Units.Data.Terabyte, "terabyte", "terabytes");
-        Add(Units.Data.Petabyte, "petabyte", "petabytes");
+        Add(Units.Data.Kilobyte, "kilobyte", "kilobytes", "kibibyte", "kibibytes");
+        Add(Units.Data.Megabyte, "megabyte", "megabytes", "mebibyte", "mebibytes");
+        Add(Units.Data.Gigabyte, "gigabyte", "gigabytes", "gibibyte", "gibibytes");
+        Add(Units.Data.Terabyte, "terabyte", "terabytes", "tebibyte", "tebibytes");
+        Add(Units.Data.Petabyte, "petabyte", "petabytes", "pebibyte", "pebibytes");
 
         // Mass
         Add(Units.Mass.Milligram, "milligram", "milligrams");
