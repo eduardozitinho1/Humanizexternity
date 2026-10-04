@@ -10,12 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write   # criar GitHub Release
-      id-token: write   # Trusted Publishing (opcional, futuro)
+      contents: write
+      id-token: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -30,7 +32,7 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --no-restore -c Release -p:Version=${{ steps.version.outputs.VERSION }}
+        run: dotnet build --no-restore -c Release -p:Version=${{ steps.version.outputs.VERSION }} -p:ContinuousIntegrationBuild=true
 
       - name: Test
         run: dotnet test --no-build -c Release --verbosity normal
@@ -46,6 +48,9 @@ jobs:
 
       - name: Push to NuGet
         run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Push symbols to NuGet
+        run: dotnet nuget push ./artifacts/*.snupkg --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
