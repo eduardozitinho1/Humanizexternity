@@ -3,13 +3,8 @@ using H13y.Measures;
 namespace H13y;
 
 /// <summary>
-/// Short facade over the most common humanization calls.
+/// Short facade over the most common humanization and conversion calls.
 /// </summary>
-/// <remarks>
-/// This is the entry point most users reach for. It exposes one method per dimension plus
-/// generic helpers for auto-selecting a unit and parsing strings. Temperature is exposed
-/// through three methods (one per scale) because auto unit selection does not apply to it.
-/// </remarks>
 public static class H
 {
     /// <summary>Humanizes a byte count into a string such as "1 GB" or "1.5 KB".</summary>
@@ -49,9 +44,31 @@ public static class H
         => Temperature.FromKelvin(kelvin).Humanize(TemperatureScale.Kelvin, options);
 
     /// <summary>
-    /// Picks the best unit for the given base value and dimension, then formats it.
+    /// Converts a numeric value from one unit to another within the same dimension.
     /// </summary>
-    /// <exception cref="ArgumentException">Thrown when <paramref name="dimension"/> is <see cref="Dimension.Temperature"/>.</exception>
+    /// <param name="value">The value to convert.</param>
+    /// <param name="from">The source unit.</param>
+    /// <param name="to">The target unit.</param>
+    /// <returns>The converted numeric value.</returns>
+    /// <exception cref="ArgumentException">Thrown when the units belong to different dimensions.</exception>
+    public static double Convert(double value, Unit from, Unit to)
+        => UnitConverter.Convert(value, from, to);
+
+    /// <summary>
+    /// Parses a human-readable string and converts the result to the target unit.
+    /// </summary>
+    /// <param name="text">Input such as "1.5 GB".</param>
+    /// <param name="to">The target unit.</param>
+    /// <returns>The value expressed in <paramref name="to"/>.</returns>
+    /// <exception cref="FormatException">Thrown when the input cannot be parsed.</exception>
+    /// <exception cref="ArgumentException">Thrown when the parsed unit and target unit belong to different dimensions.</exception>
+    public static double Convert(string text, Unit to)
+    {
+        var measure = UnitParser.Parse(text);
+        return UnitConverter.Convert(measure.Value, measure.Unit, to);
+    }
+
+    /// <summary>Picks the best unit for the given base value and dimension, then formats it.</summary>
     public static string Best(double baseValue, Dimension dimension, HumanizeOptions? options = null)
         => HumanizeFormatter.Format(baseValue, dimension, options);
 
