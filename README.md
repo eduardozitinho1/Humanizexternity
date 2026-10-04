@@ -153,6 +153,23 @@ size.ToString("R", CultureInfo.InvariantCulture);     // "1572864"
 size.ToString("N2", CultureInfo.InvariantCulture);    // "1.50"
 ```
 
+## Performance
+
+The library is allocation-light and AOT-friendly.
+
+- Unit lookup and best-unit selection are cached per dimension.
+- The single-value parser scans with `Span<char>` and `stackalloc` instead of a regex.
+- `<IsAotCompatible>true</IsAotCompatible>` is set on the package.
+
+Run benchmarks locally:
+
+```
+dotnet run --project benchmarks/H13y.Benchmarks -c Release
+```
+
+The benchmark project is intentionally kept out of the solution so `dotnet build`
+and `dotnet test` on the repo stay fast.
+
 ## License
 
 MIT
