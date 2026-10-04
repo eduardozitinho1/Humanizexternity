@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Globalization;
 
 namespace H13y.Json;
 
@@ -49,7 +50,7 @@ public sealed class MeasureConverter : JsonConverter<Measure>
         if (unitSymbol is null)
             throw new JsonException("Measure JSON is missing the 'unit' field.");
 
-        var parsed = UnitParser.Parse($"{value} {unitSymbol}");
+        var parsed = UnitParser.Parse($"{value.ToString(CultureInfo.InvariantCulture)} {unitSymbol}", CultureInfo.InvariantCulture);
         return parsed;
     }
 
