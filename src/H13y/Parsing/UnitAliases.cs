@@ -74,6 +74,49 @@ internal static class UnitAliases
         Add(Units.Temperature.Fahrenheit, "f", "fahrenheit", "°f");
         Add(Units.Temperature.Kelvin, "k", "kelvin");
 
+        // Speed
+        Add(Units.Speed.MeterPerSecond, "mps", "meterspersecond");
+        Add(Units.Speed.KilometerPerHour, "kmh", "kph", "kilometersperhour", "kilometresperhour");
+        Add(Units.Speed.MilePerHour, "milesperhour");
+        Add(Units.Speed.Knot, "knots", "kt");
+        Add(Units.Speed.FootPerSecond, "fps", "feetpersecond");
+
+        // Energy
+        Add(Units.Energy.Joule, "joule", "joules");
+        Add(Units.Energy.Kilojoule, "kilojoule", "kilojoules");
+        Add(Units.Energy.Megajoule, "megajoule", "megajoules");
+        Add(Units.Energy.Calorie, "calorie", "calories");
+        Add(Units.Energy.Kilocalorie, "kilocalorie", "kilocalories", "foodcalorie");
+        Add(Units.Energy.WattHour, "watthour", "watthours");
+        Add(Units.Energy.KilowattHour, "kilowatthour", "kilowatthours", "kwhour");
+
+        // Power
+        Add(Units.Power.Watt, "watt", "watts");
+        Add(Units.Power.Kilowatt, "kilowatt", "kilowatts");
+        Add(Units.Power.Megawatt, "megawatt", "megawatts");
+        Add(Units.Power.Gigawatt, "gigawatt", "gigawatts");
+        Add(Units.Power.Horsepower, "horsepower");
+
+        // Pressure
+        Add(Units.Pressure.Pascal, "pascal", "pascals");
+        Add(Units.Pressure.Kilopascal, "kilopascal", "kilopascals");
+        Add(Units.Pressure.Megapascal, "megapascal", "megapascals");
+        Add(Units.Pressure.Bar, "bars");
+        Add(Units.Pressure.Psi, "poundspersquareinch");
+        Add(Units.Pressure.Atmosphere, "atmospheres");
+
+        // Frequency
+        Add(Units.Frequency.Hertz, "hertz");
+        Add(Units.Frequency.Kilohertz, "kilohertz");
+        Add(Units.Frequency.Megahertz, "megahertz");
+        Add(Units.Frequency.Gigahertz, "gigahertz");
+
+        // Angle
+        Add(Units.Angle.Radian, "radians");
+        Add(Units.Angle.Degree, "degree", "degrees", "°");
+        Add(Units.Angle.Gradian, "gradians");
+        Add(Units.Angle.Turn, "turns", "revolution", "revolutions");
+
         return map;
     }
 }

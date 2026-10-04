@@ -3,12 +3,6 @@ namespace H13y;
 /// <summary>
 /// Central registry of every unit known to the library.
 /// </summary>
-/// <remarks>
-/// This class aggregates all units from every dimension into a single list, so
-/// <see cref="BestUnitSelector"/> and <see cref="UnitAliases"/> have one place to look.
-/// The registry is built once at type initialization and never mutated afterwards,
-/// which makes it safe to enumerate from multiple threads.
-/// </remarks>
 public static partial class Units
 {
     private static readonly Unit[] AllUnits =
@@ -20,6 +14,12 @@ public static partial class Units
         .. Volume.All,
         .. Area.All,
         .. Temperature.All,
+        .. Speed.All,
+        .. Energy.All,
+        .. Power.All,
+        .. Pressure.All,
+        .. Frequency.All,
+        .. Angle.All,
     ];
 
     /// <summary>Gets every unit registered in the library, across all dimensions.</summary>

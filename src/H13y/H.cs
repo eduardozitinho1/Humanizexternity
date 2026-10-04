@@ -37,6 +37,69 @@ public static class H
     public static string Kelvin(double kelvin, HumanizeOptions? options = null)
         => Temperature.FromKelvin(kelvin).Humanize(TemperatureScale.Kelvin, options);
 
+    public static string MetersPerSecond(double mps, HumanizeOptions? options = null)
+        => Speed.FromMetersPerSecond(mps).Humanize(options);
+
+    public static string KilometersPerHour(double kph, HumanizeOptions? options = null)
+        => Speed.FromKilometersPerHour(kph).Humanize(options);
+
+    public static string MilesPerHour(double mph, HumanizeOptions? options = null)
+        => Speed.FromMilesPerHour(mph).Humanize(options);
+
+    public static string Joules(double joules, HumanizeOptions? options = null)
+        => Energy.FromJoules(joules).Humanize(options);
+
+    public static string Kilojoules(double kj, HumanizeOptions? options = null)
+        => Energy.FromKilojoules(kj).Humanize(options);
+
+    public static string KilowattHours(double kwh, HumanizeOptions? options = null)
+        => Energy.FromKilowattHours(kwh).Humanize(options);
+
+    public static string Kilocalories(double kcal, HumanizeOptions? options = null)
+        => Energy.FromKilocalories(kcal).Humanize(options);
+
+    public static string Watts(double watts, HumanizeOptions? options = null)
+        => Power.FromWatts(watts).Humanize(options);
+
+    public static string Kilowatts(double kw, HumanizeOptions? options = null)
+        => Power.FromKilowatts(kw).Humanize(options);
+
+    public static string Megawatts(double mw, HumanizeOptions? options = null)
+        => Power.FromMegawatts(mw).Humanize(options);
+
+    public static string Horsepower(double hp, HumanizeOptions? options = null)
+        => Power.FromHorsepower(hp).Humanize(options);
+
+    public static string Pascals(double pa, HumanizeOptions? options = null)
+        => Pressure.FromPascals(pa).Humanize(options);
+
+    public static string Kilopascals(double kpa, HumanizeOptions? options = null)
+        => Pressure.FromKilopascals(kpa).Humanize(options);
+
+    public static string Bars(double bar, HumanizeOptions? options = null)
+        => Pressure.FromBars(bar).Humanize(options);
+
+    public static string Psi(double psi, HumanizeOptions? options = null)
+        => Pressure.FromPsi(psi).Humanize(options);
+
+    public static string Hertz(double hz, HumanizeOptions? options = null)
+        => Frequency.FromHertz(hz).Humanize(options);
+
+    public static string Kilohertz(double khz, HumanizeOptions? options = null)
+        => Frequency.FromKilohertz(khz).Humanize(options);
+
+    public static string Megahertz(double mhz, HumanizeOptions? options = null)
+        => Frequency.FromMegahertz(mhz).Humanize(options);
+
+    public static string Gigahertz(double ghz, HumanizeOptions? options = null)
+        => Frequency.FromGigahertz(ghz).Humanize(options);
+
+    public static string Radians(double rad, HumanizeOptions? options = null)
+        => Angle.FromRadians(rad).Humanize(options);
+
+    public static string Degrees(double deg, HumanizeOptions? options = null)
+        => Angle.FromDegrees(deg).Humanize(options);
+
     public static double Convert(double value, Unit from, Unit to)
         => UnitConverter.Convert(value, from, to);
 
@@ -73,10 +136,6 @@ public static class H
 
     public static Measure Parse(string text) => UnitParser.Parse(text);
 
-    /// <summary>
-    /// Attempts to parse a human-readable string into a <see cref="DataSize"/>.
-    /// Fails if the input belongs to another dimension.
-    /// </summary>
     public static bool TryParseDataSize(string text, out DataSize size)
     {
         if (TryParseDimension(text, Dimension.Data, out var value))
@@ -88,7 +147,6 @@ public static class H
         return false;
     }
 
-    /// <summary>Attempts to parse a human-readable string into a <see cref="Mass"/>.</summary>
     public static bool TryParseMass(string text, out Mass mass)
     {
         if (TryParseDimension(text, Dimension.Mass, out var value))
@@ -100,7 +158,6 @@ public static class H
         return false;
     }
 
-    /// <summary>Attempts to parse a human-readable string into a <see cref="Length"/>.</summary>
     public static bool TryParseLength(string text, out Length length)
     {
         if (TryParseDimension(text, Dimension.Length, out var value))
@@ -112,7 +169,6 @@ public static class H
         return false;
     }
 
-    /// <summary>Attempts to parse a human-readable string into a <see cref="Duration"/>.</summary>
     public static bool TryParseDuration(string text, out Duration duration)
     {
         if (TryParseDimension(text, Dimension.Time, out var value))
@@ -124,7 +180,6 @@ public static class H
         return false;
     }
 
-    /// <summary>Attempts to parse a human-readable string into a <see cref="Volume"/>.</summary>
     public static bool TryParseVolume(string text, out Volume volume)
     {
         if (TryParseDimension(text, Dimension.Volume, out var value))
@@ -136,7 +191,6 @@ public static class H
         return false;
     }
 
-    /// <summary>Attempts to parse a human-readable string into an <see cref="Area"/>.</summary>
     public static bool TryParseArea(string text, out Area area)
     {
         if (TryParseDimension(text, Dimension.Area, out var value))
@@ -148,7 +202,6 @@ public static class H
         return false;
     }
 
-    /// <summary>Attempts to parse a human-readable string into a <see cref="Temperature"/>.</summary>
     public static bool TryParseTemperature(string text, out Temperature temperature)
     {
         if (TryParseDimension(text, Dimension.Temperature, out var value))
