@@ -4,7 +4,7 @@ namespace H13y.Measures;
 /// A quantity of area, stored internally as a number of square meters.
 /// </summary>
 /// <param name="SquareMeters">The area in square meters.</param>
-public readonly record struct Area(double SquareMeters) : IComparable<Area>
+public readonly record struct Area(double SquareMeters) : IComparable<Area>, IFormattable
 {
     public static Area FromSquareMillimeters(double mm2) => new(mm2 / 1_000_000);
     public static Area FromSquareCentimeters(double cm2) => new(cm2 / 10_000);
@@ -28,6 +28,9 @@ public readonly record struct Area(double SquareMeters) : IComparable<Area>
 
     public string Humanize(HumanizeOptions? options = null)
         => HumanizeFormatter.Format(SquareMeters, Dimension.Area, options);
+
+    public string ToString(string? format, IFormatProvider? formatProvider)
+        => FormattableHelpers.FormatScalar(SquareMeters, Dimension.Area, format, formatProvider);
 
     public override string ToString() => Humanize();
 }

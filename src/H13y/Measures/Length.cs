@@ -4,7 +4,7 @@ namespace H13y.Measures;
 /// A quantity of length, stored internally as a number of meters.
 /// </summary>
 /// <param name="Meters">The length in meters.</param>
-public readonly record struct Length(double Meters) : IComparable<Length>
+public readonly record struct Length(double Meters) : IComparable<Length>, IFormattable
 {
     public static Length FromMillimeters(double mm) => new(mm / 1000);
     public static Length FromCentimeters(double cm) => new(cm / 100);
@@ -26,6 +26,9 @@ public readonly record struct Length(double Meters) : IComparable<Length>
 
     public string Humanize(HumanizeOptions? options = null)
         => HumanizeFormatter.Format(Meters, Dimension.Length, options);
+
+    public string ToString(string? format, IFormatProvider? formatProvider)
+        => FormattableHelpers.FormatScalar(Meters, Dimension.Length, format, formatProvider);
 
     public override string ToString() => Humanize();
 }

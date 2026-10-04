@@ -3,14 +3,8 @@ namespace H13y.Measures;
 /// <summary>
 /// A quantity of digital information, stored internally as a number of bytes.
 /// </summary>
-/// <remarks>
-/// <see cref="DataSize"/> is the strongly-typed representation for anything measured in
-/// bytes: file sizes, memory usage, network traffic, database volumes. Internally it
-/// always stores the value as a <see cref="long"/> count of bytes, so arithmetic is exact
-/// and there is no risk of losing precision.
-/// </remarks>
 /// <param name="Bytes">The size in bytes.</param>
-public readonly record struct DataSize(long Bytes) : IComparable<DataSize>
+public readonly record struct DataSize(long Bytes) : IComparable<DataSize>, IFormattable
 {
     public static DataSize FromBytes(long bytes) => new(bytes);
     public static DataSize FromKilobytes(double kb) => new((long)(kb * 1024));
@@ -34,6 +28,9 @@ public readonly record struct DataSize(long Bytes) : IComparable<DataSize>
 
     public string Humanize(HumanizeOptions? options = null)
         => HumanizeFormatter.Format(Bytes, Dimension.Data, options);
+
+    public string ToString(string? format, IFormatProvider? formatProvider)
+        => FormattableHelpers.FormatScalar(Bytes, Dimension.Data, format, formatProvider);
 
     public override string ToString() => Humanize();
 }

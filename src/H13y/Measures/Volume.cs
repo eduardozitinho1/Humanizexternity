@@ -4,7 +4,7 @@ namespace H13y.Measures;
 /// A quantity of volume, stored internally as a number of liters.
 /// </summary>
 /// <param name="Liters">The volume in liters.</param>
-public readonly record struct Volume(double Liters) : IComparable<Volume>
+public readonly record struct Volume(double Liters) : IComparable<Volume>, IFormattable
 {
     public static Volume FromMilliliters(double ml) => new(ml / 1000);
     public static Volume FromCentiliters(double cl) => new(cl / 100);
@@ -26,6 +26,9 @@ public readonly record struct Volume(double Liters) : IComparable<Volume>
 
     public string Humanize(HumanizeOptions? options = null)
         => HumanizeFormatter.Format(Liters, Dimension.Volume, options);
+
+    public string ToString(string? format, IFormatProvider? formatProvider)
+        => FormattableHelpers.FormatScalar(Liters, Dimension.Volume, format, formatProvider);
 
     public override string ToString() => Humanize();
 }

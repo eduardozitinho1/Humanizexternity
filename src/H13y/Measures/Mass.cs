@@ -4,7 +4,7 @@ namespace H13y.Measures;
 /// A quantity of mass, stored internally as a number of grams.
 /// </summary>
 /// <param name="Grams">The mass in grams.</param>
-public readonly record struct Mass(double Grams) : IComparable<Mass>
+public readonly record struct Mass(double Grams) : IComparable<Mass>, IFormattable
 {
     public static Mass FromMilligrams(double mg) => new(mg / 1000);
     public static Mass FromGrams(double g) => new(g);
@@ -26,6 +26,9 @@ public readonly record struct Mass(double Grams) : IComparable<Mass>
 
     public string Humanize(HumanizeOptions? options = null)
         => HumanizeFormatter.Format(Grams, Dimension.Mass, options);
+
+    public string ToString(string? format, IFormatProvider? formatProvider)
+        => FormattableHelpers.FormatScalar(Grams, Dimension.Mass, format, formatProvider);
 
     public override string ToString() => Humanize();
 }

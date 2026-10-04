@@ -4,7 +4,7 @@ namespace H13y.Measures;
 /// A span of time, stored internally as a number of seconds.
 /// </summary>
 /// <param name="Seconds">The duration in seconds.</param>
-public readonly record struct Duration(double Seconds) : IComparable<Duration>
+public readonly record struct Duration(double Seconds) : IComparable<Duration>, IFormattable
 {
     public static Duration FromMilliseconds(double ms) => new(ms / 1000);
     public static Duration FromSeconds(double s) => new(s);
@@ -30,6 +30,9 @@ public readonly record struct Duration(double Seconds) : IComparable<Duration>
 
     public string Humanize(HumanizeOptions? options = null)
         => HumanizeFormatter.FormatDuration(Seconds, options);
+
+    public string ToString(string? format, IFormatProvider? formatProvider)
+        => FormattableHelpers.FormatDuration(Seconds, format, formatProvider);
 
     public override string ToString() => Humanize();
 }
