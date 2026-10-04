@@ -27,5 +27,5 @@ public enum DecimalMode
     /// <summary>
     /// 1000-based scaling (1 kB = 1000 B, 1 MB = 1000 kB). SI standard.
     /// </summary>
-    Metric,
+    Si,
 }
