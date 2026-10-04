@@ -1,4 +1,5 @@
 using Xunit;
+using System.Globalization;
 
 namespace H13y.Tests;
 
@@ -91,21 +92,21 @@ public class ConversionTests
     [Fact]
     public void Parse_and_convert_string_to_target_unit()
     {
-        var result = H.Convert("1.5 GB", Units.Data.Megabyte);
+        var result = H.Convert("1.5 GB", Units.Data.Megabyte, CultureInfo.InvariantCulture);
         Assert.Equal(1536, result, precision: 6);
     }
 
     [Fact]
     public void Parse_and_convert_string_to_kilograms()
     {
-        var result = H.Convert("1500 g", Units.Mass.Kilogram);
+        var result = H.Convert("1500 g", Units.Mass.Kilogram, CultureInfo.InvariantCulture);
         Assert.Equal(1.5, result, precision: 6);
     }
 
     [Fact]
     public void Parse_and_convert_with_iec_symbol()
     {
-        var result = H.Convert("1 GiB", Units.Data.Megabyte);
+        var result = H.Convert("1 GiB", Units.Data.Megabyte, CultureInfo.InvariantCulture);
         Assert.Equal(1024, result, precision: 6);
     }
 
@@ -113,6 +114,6 @@ public class ConversionTests
     public void Parse_and_convert_incompatible_throws()
     {
         Assert.Throws<ArgumentException>(() =>
-            H.Convert("1 kg", Units.Data.Byte));
+            H.Convert("1 kg", Units.Data.Byte, CultureInfo.InvariantCulture));
     }
 }

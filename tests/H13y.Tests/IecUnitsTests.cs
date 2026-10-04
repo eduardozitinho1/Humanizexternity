@@ -1,5 +1,6 @@
 using H13y.Measures;
 using Xunit;
+using System.Globalization;
 
 namespace H13y.Tests;
 
@@ -47,7 +48,7 @@ public class IecUnitsTests
     [InlineData("1 mebibytes", 1024 * 1024)]
     public void Parser_accepts_iec_symbols_and_names(string input, long expectedBytes)
     {
-        var m = H.Parse(input);
+        var m = H.Parse(input, CultureInfo.InvariantCulture);
         Assert.Equal(expectedBytes, (long)m.ToBase());
     }
 

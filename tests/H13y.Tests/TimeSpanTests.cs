@@ -1,5 +1,6 @@
 using H13y.Measures;
 using Xunit;
+using System.Globalization;
 
 namespace H13y.Tests;
 
@@ -62,47 +63,47 @@ public class TimeSpanTests
     [Fact]
     public void ParseTimeSpan_compound()
     {
-        var span = H.ParseTimeSpan("1h30min");
+        var span = H.ParseTimeSpan("1h30min", CultureInfo.InvariantCulture);
         Assert.Equal(TimeSpan.FromMinutes(90), span);
     }
 
     [Fact]
     public void ParseTimeSpan_colon()
     {
-        var span = H.ParseTimeSpan("1:30:45");
+        var span = H.ParseTimeSpan("1:30:45", CultureInfo.InvariantCulture);
         Assert.Equal(new TimeSpan(1, 30, 45), span);
     }
 
     [Fact]
     public void ParseTimeSpan_simple()
     {
-        var span = H.ParseTimeSpan("1500 ms");
+        var span = H.ParseTimeSpan("1500 ms", CultureInfo.InvariantCulture);
         Assert.Equal(TimeSpan.FromMilliseconds(1500), span);
     }
 
     [Fact]
     public void ParseTimeSpan_throws_for_non_time_dimension()
     {
-        Assert.Throws<FormatException>(() => H.ParseTimeSpan("1.5 kg"));
+        Assert.Throws<FormatException>(() => H.ParseTimeSpan("1.5 kg", CultureInfo.InvariantCulture));
     }
 
     [Fact]
     public void TryParseTimeSpan_success()
     {
-        Assert.True(H.TryParseTimeSpan("2h", out var span));
+        Assert.True(H.TryParseTimeSpan("2h", CultureInfo.InvariantCulture, out var span));
         Assert.Equal(TimeSpan.FromHours(2), span);
     }
 
     [Fact]
     public void TryParseTimeSpan_failure_returns_false()
     {
-        Assert.False(H.TryParseTimeSpan("garbage", out _));
+        Assert.False(H.TryParseTimeSpan("garbage", CultureInfo.InvariantCulture, out _));
     }
 
     [Fact]
     public void TryParseTimeSpan_rejects_non_time_dimension()
     {
-        Assert.False(H.TryParseTimeSpan("1.5 kg", out _));
+        Assert.False(H.TryParseTimeSpan("1.5 kg", CultureInfo.InvariantCulture, out _));
     }
 
     [Fact]

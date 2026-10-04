@@ -2,6 +2,7 @@ using System.Text.Json;
 using H13y.Json;
 using H13y.Measures;
 using Xunit;
+using System.Globalization;
 
 namespace H13y.Tests;
 
@@ -12,7 +13,7 @@ public class JsonTests
     [Fact]
     public void Measure_serializes_to_object()
     {
-        var m = H.Parse("1.5 kg");
+        var m = H.Parse("1.5 kg", CultureInfo.InvariantCulture);
         var json = JsonSerializer.Serialize(m, H13yJson.Options);
         Assert.Equal("{\"value\":1.5,\"unit\":\"kg\"}", json);
     }
@@ -20,7 +21,7 @@ public class JsonTests
     [Fact]
     public void Measure_round_trips()
     {
-        var original = H.Parse("1.5 kg");
+        var original = H.Parse("1.5 kg", CultureInfo.InvariantCulture);
         var json = JsonSerializer.Serialize(original, H13yJson.Options);
         var restored = JsonSerializer.Deserialize<Measure>(json, H13yJson.Options);
         Assert.Equal(original.Value, restored.Value);

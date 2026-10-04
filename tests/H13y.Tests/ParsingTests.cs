@@ -1,4 +1,5 @@
 using Xunit;
+using System.Globalization;
 
 namespace H13y.Tests;
 
@@ -12,7 +13,7 @@ public class ParsingTests
     [InlineData("1500 g", 1500, "g")]
     public void Parse_returns_value_and_unit(string input, double value, string symbol)
     {
-        var m = UnitParser.Parse(input);
+        var m = UnitParser.Parse(input, CultureInfo.InvariantCulture);
         Assert.Equal(value, m.Value);
         Assert.Equal(symbol, m.Unit.Symbol);
     }
@@ -20,12 +21,12 @@ public class ParsingTests
     [Fact]
     public void TryParse_returns_false_on_invalid()
     {
-        Assert.False(UnitParser.TryParse("not a measure", out _));
+        Assert.False(UnitParser.TryParse("not a measure", CultureInfo.InvariantCulture, out _));
     }
 
     [Fact]
     public void Parse_throws_on_unknown_unit()
     {
-        Assert.Throws<FormatException>(() => UnitParser.Parse("1 xyz"));
+        Assert.Throws<FormatException>(() => UnitParser.Parse("1 xyz", CultureInfo.InvariantCulture));
     }
 }

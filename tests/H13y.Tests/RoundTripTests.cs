@@ -1,5 +1,6 @@
 using H13y.Measures;
 using Xunit;
+using System.Globalization;
 
 namespace H13y.Tests;
 
@@ -16,7 +17,7 @@ public class RoundTripTests
     {
         var original = Mass.FromGrams(grams);
         var text = original.Humanize();
-        var parsed = H.Parse(text);
+        var parsed = H.Parse(text, CultureInfo.InvariantCulture);
         Assert.Equal(Dimension.Mass, parsed.Unit.Dimension);
         Assert.Equal(original.Grams, parsed.ToBase(), precision: 4);
     }
@@ -32,7 +33,7 @@ public class RoundTripTests
     {
         var original = Length.FromMeters(meters);
         var text = original.Humanize();
-        var parsed = H.Parse(text);
+        var parsed = H.Parse(text, CultureInfo.InvariantCulture);
         Assert.Equal(Dimension.Length, parsed.Unit.Dimension);
         Assert.Equal(original.Meters, parsed.ToBase(), precision: 4);
     }
@@ -47,7 +48,7 @@ public class RoundTripTests
     {
         var original = Volume.FromLiters(liters);
         var text = original.Humanize();
-        var parsed = H.Parse(text);
+        var parsed = H.Parse(text, CultureInfo.InvariantCulture);
         Assert.Equal(Dimension.Volume, parsed.Unit.Dimension);
         Assert.Equal(original.Liters, parsed.ToBase(), precision: 4);
     }
@@ -62,7 +63,7 @@ public class RoundTripTests
     {
         var original = Area.FromSquareMeters(squareMeters);
         var text = original.Humanize();
-        var parsed = H.Parse(text);
+        var parsed = H.Parse(text, CultureInfo.InvariantCulture);
         Assert.Equal(Dimension.Area, parsed.Unit.Dimension);
         Assert.Equal(original.SquareMeters, parsed.ToBase(), precision: 4);
     }
@@ -78,7 +79,7 @@ public class RoundTripTests
     {
         var original = Duration.FromSeconds(seconds);
         var text = original.Humanize();
-        var parsed = H.Parse(text);
+        var parsed = H.Parse(text, CultureInfo.InvariantCulture);
         Assert.Equal(Dimension.Time, parsed.Unit.Dimension);
         Assert.Equal(original.Seconds, parsed.ToBase(), precision: 4);
     }
@@ -94,7 +95,7 @@ public class RoundTripTests
     {
         var original = Temperature.FromCelsius(celsius);
         var text = original.Humanize();
-        var parsed = H.Parse(text);
+        var parsed = H.Parse(text, CultureInfo.InvariantCulture);
         Assert.Equal(Dimension.Temperature, parsed.Unit.Dimension);
         Assert.Equal(original.Kelvin, parsed.ToBase(), precision: 2);
     }
@@ -110,7 +111,7 @@ public class RoundTripTests
     {
         var original = DataSize.FromBytes(bytes);
         var text = original.Humanize();
-        var parsed = H.Parse(text);
+        var parsed = H.Parse(text, CultureInfo.InvariantCulture);
         Assert.Equal(Dimension.Data, parsed.Unit.Dimension);
         Assert.Equal(original.Bytes, (long)parsed.ToBase());
     }
@@ -123,7 +124,7 @@ public class RoundTripTests
         var original = DataSize.FromBytes(bytes);
         var opts = new HumanizeOptions { UseIecSymbols = true };
         var text = original.Humanize(opts);
-        var parsed = H.Parse(text);
+        var parsed = H.Parse(text, CultureInfo.InvariantCulture);
         Assert.Equal(original.Bytes, (long)parsed.ToBase());
     }
 
@@ -153,7 +154,7 @@ public class RoundTripTests
     public void TryParseDataSize_round_trip()
     {
         var original = DataSize.FromMegabytes(512);
-        Assert.True(H.TryParseDataSize(original.Humanize(), out var restored));
+        Assert.True(H.TryParseDataSize(original.Humanize(), CultureInfo.InvariantCulture, out var restored));
         Assert.Equal(original.Bytes, restored.Bytes);
     }
 
@@ -161,7 +162,7 @@ public class RoundTripTests
     public void TryParseMass_round_trip()
     {
         var original = Mass.FromKilograms(2);
-        Assert.True(H.TryParseMass(original.Humanize(), out var restored));
+        Assert.True(H.TryParseMass(original.Humanize(), CultureInfo.InvariantCulture, out var restored));
         Assert.Equal(original.Grams, restored.Grams, precision: 4);
     }
 
@@ -169,7 +170,7 @@ public class RoundTripTests
     public void TryParseTemperature_round_trip()
     {
         var original = Temperature.FromCelsius(100);
-        Assert.True(H.TryParseTemperature(original.Humanize(), out var restored));
+        Assert.True(H.TryParseTemperature(original.Humanize(), CultureInfo.InvariantCulture, out var restored));
         Assert.Equal(original.Kelvin, restored.Kelvin, precision: 2);
     }
 }

@@ -1,5 +1,6 @@
 using H13y.Measures;
 using Xunit;
+using System.Globalization;
 
 namespace H13y.Tests;
 
@@ -102,7 +103,7 @@ public class EdgeCaseTests
     [InlineData("2d 12h", 216000)]
     public void Parse_compound_duration(string input, double expectedSeconds)
     {
-        var m = H.Parse(input);
+        var m = H.Parse(input, CultureInfo.InvariantCulture);
         Assert.Equal(expectedSeconds, m.ToBase(), precision: 6);
     }
 
@@ -115,26 +116,26 @@ public class EdgeCaseTests
     [InlineData("2:00:00", 7200)]
     public void Parse_colon_duration(string input, double expectedSeconds)
     {
-        var m = H.Parse(input);
+        var m = H.Parse(input, CultureInfo.InvariantCulture);
         Assert.Equal(expectedSeconds, m.ToBase(), precision: 6);
     }
 
     [Fact]
     public void Parse_compound_with_unknown_unit_throws()
     {
-        Assert.Throws<FormatException>(() => H.Parse("1h30xyz"));
+        Assert.Throws<FormatException>(() => H.Parse("1h30xyz", CultureInfo.InvariantCulture));
     }
 
     [Fact]
     public void Parse_compound_with_non_time_unit_throws()
     {
-        Assert.Throws<FormatException>(() => H.Parse("1kg2g"));
+        Assert.Throws<FormatException>(() => H.Parse("1kg2g", CultureInfo.InvariantCulture));
     }
 
     [Fact]
     public void Parse_compound_returns_seconds_unit()
     {
-        var m = H.Parse("1h30min");
+        var m = H.Parse("1h30min", CultureInfo.InvariantCulture);
         Assert.Equal("s", m.Unit.Symbol);
         Assert.Equal(Dimension.Time, m.Unit.Dimension);
     }
@@ -142,7 +143,7 @@ public class EdgeCaseTests
     [Fact]
     public void Parse_colon_returns_seconds_unit()
     {
-        var m = H.Parse("1:30");
+        var m = H.Parse("1:30", CultureInfo.InvariantCulture);
         Assert.Equal("s", m.Unit.Symbol);
         Assert.Equal(Dimension.Time, m.Unit.Dimension);
     }

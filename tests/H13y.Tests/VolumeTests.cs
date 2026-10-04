@@ -1,5 +1,6 @@
 using H13y.Measures;
 using Xunit;
+using System.Globalization;
 
 namespace H13y.Tests;
 
@@ -55,7 +56,7 @@ public class VolumeTests
     [InlineData("1 m3", 1000)]
     public void Parse_volume_units(string input, double expectedLiters)
     {
-        var m = H.Parse(input);
+        var m = H.Parse(input, CultureInfo.InvariantCulture);
         var v = Volume.FromLiters(m.ToBase());
         Assert.Equal(expectedLiters, v.Liters, precision: 6);
     }

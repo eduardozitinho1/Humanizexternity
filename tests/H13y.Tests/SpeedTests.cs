@@ -1,5 +1,6 @@
 using H13y.Measures;
 using Xunit;
+using System.Globalization;
 
 namespace H13y.Tests;
 
@@ -49,7 +50,7 @@ public class SpeedTests
     [InlineData("32 ft/s", 32)]
     public void Parse_variants(string input, double expected)
     {
-        var m = H.Parse(input);
+        var m = H.Parse(input, CultureInfo.InvariantCulture);
         Assert.Equal(Dimension.Speed, m.Unit.Dimension);
         Assert.Equal(expected, m.Value, precision: 3);
     }

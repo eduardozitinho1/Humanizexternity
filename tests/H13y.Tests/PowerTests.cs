@@ -1,5 +1,6 @@
 using H13y.Measures;
 using Xunit;
+using System.Globalization;
 
 namespace H13y.Tests;
 
@@ -34,7 +35,7 @@ public class PowerTests
     [InlineData("1 kilowatt", 1)]
     public void Parse_variants(string input, double expectedValue)
     {
-        var m = H.Parse(input);
+        var m = H.Parse(input, CultureInfo.InvariantCulture);
         Assert.Equal(Dimension.Power, m.Unit.Dimension);
         Assert.Equal(expectedValue, m.Value, precision: 6);
     }
