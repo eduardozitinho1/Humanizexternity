@@ -23,6 +23,10 @@ public static class H
     public static string Seconds(double seconds, HumanizeOptions? options = null)
         => Duration.FromSeconds(seconds).Humanize(options);
 
+    /// <summary>Humanizes a <see cref="TimeSpan"/> into a compound string.</summary>
+    public static string TimeSpan(System.TimeSpan span, HumanizeOptions? options = null)
+        => Duration.FromTimeSpan(span).Humanize(options);
+
     /// <summary>Humanizes a volume in liters into a string such as "1.5 l" or "500 ml".</summary>
     public static string Liters(double liters, HumanizeOptions? options = null)
         => Volume.FromLiters(liters).Humanize(options);
@@ -43,29 +47,44 @@ public static class H
     public static string Kelvin(double kelvin, HumanizeOptions? options = null)
         => Temperature.FromKelvin(kelvin).Humanize(TemperatureScale.Kelvin, options);
 
-    /// <summary>
-    /// Converts a numeric value from one unit to another within the same dimension.
-    /// </summary>
-    /// <param name="value">The value to convert.</param>
-    /// <param name="from">The source unit.</param>
-    /// <param name="to">The target unit.</param>
-    /// <returns>The converted numeric value.</returns>
-    /// <exception cref="ArgumentException">Thrown when the units belong to different dimensions.</exception>
+    /// <summary>Converts a numeric value from one unit to another within the same dimension.</summary>
     public static double Convert(double value, Unit from, Unit to)
         => UnitConverter.Convert(value, from, to);
 
-    /// <summary>
-    /// Parses a human-readable string and converts the result to the target unit.
-    /// </summary>
-    /// <param name="text">Input such as "1.5 GB".</param>
-    /// <param name="to">The target unit.</param>
-    /// <returns>The value expressed in <paramref name="to"/>.</returns>
-    /// <exception cref="FormatException">Thrown when the input cannot be parsed.</exception>
-    /// <exception cref="ArgumentException">Thrown when the parsed unit and target unit belong to different dimensions.</exception>
+    /// <summary>Parses a human-readable string and converts the result to the target unit.</summary>
     public static double Convert(string text, Unit to)
     {
         var measure = UnitParser.Parse(text);
         return UnitConverter.Convert(measure.Value, measure.Unit, to);
+    }
+
+    /// <summary>
+    /// Parses a human-readable duration into a <see cref="System.TimeSpan"/>.
+    /// Accepts every form supported by <see cref="Parse"/>, including "1h30min" and "1:30".
+    /// </summary>
+    /// <exception cref="FormatException">Thrown when the input cannot be parsed or is not a duration.</exception>
+    public static System.TimeSpan ParseTimeSpan(string text)
+    {
+        var measure = UnitParser.Parse(text);
+        if (measure.Unit.Dimension != Dimension.Time)
+            throw new FormatException($"Input '{text}' is not a duration.");
+
+        return System.TimeSpan.FromSeconds(measure.ToBase());
+    }
+
+    /// <summary>Attempts to parse a human-readable duration into a <see cref="System.TimeSpan"/>.</summary>
+    public static bool TryParseTimeSpan(string text, out System.TimeSpan span)
+    {
+        try
+        {
+            span = ParseTimeSpan(text);
+            return true;
+        }
+        catch (FormatException)
+        {
+            span = default;
+            return false;
+        }
     }
 
     /// <summary>Picks the best unit for the given base value and dimension, then formats it.</summary>

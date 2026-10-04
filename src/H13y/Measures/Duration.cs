@@ -3,6 +3,10 @@ namespace H13y.Measures;
 /// <summary>
 /// A span of time, stored internally as a number of seconds.
 /// </summary>
+/// <remarks>
+/// Interoperates with <see cref="System.TimeSpan"/> through <see cref="FromTimeSpan"/>
+/// and <see cref="ToTimeSpan"/>. Conversion preserves sub-second precision.
+/// </remarks>
 /// <param name="Seconds">The duration in seconds.</param>
 public readonly record struct Duration(double Seconds) : IComparable<Duration>, IFormattable
 {
@@ -13,11 +17,17 @@ public readonly record struct Duration(double Seconds) : IComparable<Duration>, 
     public static Duration FromDays(double d) => new(d * 86400);
     public static Duration FromWeeks(double w) => new(w * 604800);
 
+    /// <summary>Creates a duration from a <see cref="TimeSpan"/>.</summary>
+    public static Duration FromTimeSpan(TimeSpan span) => new(span.TotalSeconds);
+
     public double ToMilliseconds() => Seconds * 1000;
     public double ToMinutes() => Seconds / 60;
     public double ToHours() => Seconds / 3600;
     public double ToDays() => Seconds / 86400;
     public double ToWeeks() => Seconds / 604800;
+
+    /// <summary>Converts this duration to a <see cref="TimeSpan"/>.</summary>
+    public TimeSpan ToTimeSpan() => TimeSpan.FromSeconds(Seconds);
 
     public static Duration operator +(Duration left, Duration right) => new(left.Seconds + right.Seconds);
     public static Duration operator -(Duration left, Duration right) => new(left.Seconds - right.Seconds);

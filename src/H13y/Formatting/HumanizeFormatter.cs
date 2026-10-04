@@ -31,6 +31,7 @@ public static class HumanizeFormatter
         if (double.IsNegativeInfinity(seconds)) return "-∞";
 
         var opts = options ?? HumanizeOptions.Default;
+        var joinSeparator = opts.SpaceBetweenValueAndUnit ? " " : "";
 
         if (seconds < 1)
             return Combine(seconds * 1000, "ms", opts);
@@ -43,7 +44,7 @@ public static class HumanizeFormatter
             int minutes = (int)(seconds / 60);
             double secondsLeft = seconds % 60;
             return secondsLeft > 0
-                ? $"{Combine(minutes, "min", opts)} {Combine(secondsLeft, "s", opts)}"
+                ? $"{Combine(minutes, "min", opts)}{joinSeparator}{Combine(secondsLeft, "s", opts)}"
                 : Combine(minutes, "min", opts);
         }
 
@@ -56,7 +57,7 @@ public static class HumanizeFormatter
             var parts = new List<string> { Combine(hours, "h", opts) };
             if (minutes > 0) parts.Add(Combine(minutes, "min", opts));
             if (secondsLeft > 0) parts.Add(Combine(secondsLeft, "s", opts));
-            return string.Join(" ", parts);
+            return string.Join(joinSeparator, parts);
         }
 
         if (seconds < 604800)
@@ -64,14 +65,14 @@ public static class HumanizeFormatter
             int days = (int)(seconds / 86400);
             int hours = (int)((seconds % 86400) / 3600);
             return hours > 0
-                ? $"{Combine(days, "d", opts)} {Combine(hours, "h", opts)}"
+                ? $"{Combine(days, "d", opts)}{joinSeparator}{Combine(hours, "h", opts)}"
                 : Combine(days, "d", opts);
         }
 
         int weeks = (int)(seconds / 604800);
         int daysLeft = (int)((seconds % 604800) / 86400);
         return daysLeft > 0
-            ? $"{Combine(weeks, "w", opts)} {Combine(daysLeft, "d", opts)}"
+            ? $"{Combine(weeks, "w", opts)}{joinSeparator}{Combine(daysLeft, "d", opts)}"
             : Combine(weeks, "w", opts);
     }
 
