@@ -4,19 +4,13 @@ namespace H13y;
 /// Chooses the most appropriate unit to display a value in, given its dimension.
 /// </summary>
 /// <remarks>
-/// The selection follows a simple rule: from the largest candidate unit to the smallest,
-/// return the first one whose factor is less than or equal to the base value.
-///
-/// Three special cases are handled explicitly:
-///
-/// <list type="bullet">
-///   <item><description><b>Temperature</b> — throws, because temperature units are affine and the concept of a "best unit" does not apply. Use <c>Temperature.Humanize</c> instead.</description></item>
-///   <item><description><b>Zero</b> — returns the base unit (factor 1) so that "0 g", "0 m", and "0 l" render naturally.</description></item>
-///   <item><description><b>Below the smallest unit</b> — returns the smallest unit so fractional values like 0.5 g still display with a real symbol.</description></item>
-/// </list>
+/// The candidate list for each dimension is precomputed and sorted by descending factor,
+/// so repeated calls in formatting loops do not sort or allocate.
 /// </remarks>
 internal static class BestUnitSelector
 {
+    private static readonly Dictionary<Dimension, Unit[]> DescendingCache = BuildCache();
+
     public static Unit Pick(double baseValue, Dimension dimension)
     {
         if (dimension == Dimension.Temperature)
@@ -24,17 +18,15 @@ internal static class BestUnitSelector
                 "Dimension.Temperature is affine, not linear. Use Temperature.Humanize or TemperatureFormatter.Format.",
                 nameof(dimension));
 
-        var candidates = Units.ByDimension(dimension)
-            .OrderByDescending(u => u.Factor)
-            .ToArray();
-
-        if (candidates.Length == 0)
+        if (!DescendingCache.TryGetValue(dimension, out var candidates) || candidates.Length == 0)
             throw new ArgumentException($"No units registered for dimension '{dimension}'.", nameof(dimension));
 
         if (baseValue == 0)
         {
-            var baseUnit = candidates.FirstOrDefault(u => u.Factor == 1);
-            return baseUnit ?? candidates[^1];
+            foreach (var unit in candidates)
+                if (unit.Factor == 1) return unit;
+
+            return candidates[^1];
         }
 
         foreach (var unit in candidates)
@@ -45,4 +37,11 @@ internal static class BestUnitSelector
 
         return candidates[^1];
     }
+
+    private static Dictionary<Dimension, Unit[]> BuildCache()
+        => Units.All
+            .GroupBy(u => u.Dimension)
+            .ToDictionary(
+                g => g.Key,
+                g => g.OrderByDescending(u => u.Factor).ToArray());
 }
