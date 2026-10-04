@@ -12,18 +12,15 @@ namespace H13y;
 /// <list type="number">
 ///   <item><description><b>Compound duration</b> — "1h30min", "1 h 30 min", "1h30m45s".</description></item>
 ///   <item><description><b>Colon duration</b> — "1:30" (mm:ss), "1:30:45" (hh:mm:ss).</description></item>
-///   <item><description><b>Single value + unit</b> — "1 GB", "25 °C", "1 m3".</description></item>
+///   <item><description><b>Single value + unit</b> — "1 GB", "25 °C", "1 m3", "100 km/h".</description></item>
 /// </list>
 ///
-/// The single-unit pattern accepts the degree symbol so temperature strings such as "25 °C"
-/// parse correctly.
+/// The single-value path uses a manual span-based scanner instead of a regex.
+/// Compound and colon durations still use compiled regexes because their grammar is
+/// regular and the scanner would be significantly larger for no measurable gain.
 /// </remarks>
 public static class UnitParser
 {
-    private static readonly Regex SinglePattern = new(
-        @"^(?<value>[-+]?\d+(?:[.,]\d+)?)\s*(?<unit>[°A-Za-z0-9/]+)?$",
-        RegexOptions.Compiled | RegexOptions.CultureInvariant);
-
     private static readonly Regex CompoundPattern = new(
         @"^\s*(?:(?<value>\d+(?:[.,]\d+)?)\s*(?<unit>[A-Za-z]+)\s*){2,}$",
         RegexOptions.Compiled | RegexOptions.CultureInvariant);
@@ -51,22 +48,16 @@ public static class UnitParser
         if (TryParseColonDuration(trimmed, out var colon))
             return colon;
 
-        var match = SinglePattern.Match(trimmed);
-        if (!match.Success)
+        if (!TryParseSingle(trimmed, out var value, out var unitSymbol))
             throw new FormatException($"Could not parse '{text}'.");
 
-        var valueText = match.Groups["value"].Value.Replace(',', '.');
-        if (!double.TryParse(valueText, NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
-            throw new FormatException($"Could not parse number '{valueText}'.");
-
-        var symbol = match.Groups["unit"].Value;
-        var unit = UnitAliases.Resolve(symbol)
-            ?? throw new FormatException($"Unknown unit '{symbol}'.");
+        var unit = UnitAliases.Resolve(unitSymbol)
+            ?? throw new FormatException($"Unknown unit '{unitSymbol}'.");
 
         return new Measure(value, unit);
     }
 
-    /// <summary>Attempts to parse without throwing.</summary>
+    /// <summary>Attempts to parse a human-readable string into a <see cref="Measure"/> without throwing.</summary>
     public static bool TryParse(string text, out Measure measure)
     {
         try
@@ -81,12 +72,58 @@ public static class UnitParser
         }
     }
 
+    private static bool TryParseSingle(string text, out double value, out string unitSymbol)
+    {
+        value = 0;
+        unitSymbol = string.Empty;
+
+        var span = text.AsSpan().Trim();
+        if (span.IsEmpty) return false;
+
+        var i = 0;
+        if (i < span.Length && (span[i] == '+' || span[i] == '-')) i++;
+
+        var digitStart = i;
+        while (i < span.Length && char.IsDigit(span[i])) i++;
+        if (i == digitStart) return false;
+
+        if (i < span.Length && (span[i] == '.' || span[i] == ','))
+        {
+            i++;
+            var fracStart = i;
+            while (i < span.Length && char.IsDigit(span[i])) i++;
+            if (i == fracStart) return false;
+        }
+
+        var numberSpan = span[..i];
+        var rest = span[i..].Trim();
+
+        if (numberSpan.IndexOf(',') >= 0)
+        {
+            Span<char> buf = stackalloc char[numberSpan.Length];
+            for (var j = 0; j < numberSpan.Length; j++)
+                buf[j] = numberSpan[j] == ',' ? '.' : numberSpan[j];
+
+            if (!double.TryParse(buf, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+                return false;
+        }
+        else
+        {
+            if (!double.TryParse(numberSpan, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+                return false;
+        }
+
+        if (rest.IsEmpty) return false;
+
+        unitSymbol = rest.ToString();
+        return true;
+    }
+
     private static bool TryParseCompoundDuration(string text, out Measure measure)
     {
         measure = default;
         var match = CompoundPattern.Match(text);
-        if (!match.Success)
-            return false;
+        if (!match.Success) return false;
 
         var valueCaptures = match.Groups["value"].Captures;
         var unitCaptures = match.Groups["unit"].Captures;
@@ -103,8 +140,7 @@ public static class UnitParser
                 return false;
 
             var unit = ResolveTimeUnit(unitCaptures[i].Value);
-            if (unit is null)
-                return false;
+            if (unit is null) return false;
 
             totalSeconds += value * unit.Factor;
         }
@@ -117,8 +153,7 @@ public static class UnitParser
     {
         measure = default;
         var match = ColonPattern.Match(text);
-        if (!match.Success)
-            return false;
+        if (!match.Success) return false;
 
         if (!double.TryParse(match.Groups["a"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var a))
             return false;
