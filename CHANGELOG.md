@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.0.0] - 2026-10-04
+
+### Changed (breaking)
+- Every parsing API now requires an explicit `CultureInfo`: `H.Parse`, `H.ParseTimeSpan`,
+  `H.TryParseTimeSpan`, all `H.TryParseXxx`, `H.Convert(string, Unit, CultureInfo)`,
+  and `UnitParser.Parse` / `UnitParser.TryParse`. The parser respects the culture's
+  decimal separator and rejects the other one, so `"1,5 GB"` only parses under a
+  comma culture and `"1.5 GB"` only under a dot culture.
+- `DecimalMode.Metric` renamed to `DecimalMode.Si`.
+
+### Migration
+- Add `using System.Globalization;` and pass `CultureInfo.InvariantCulture` where you
+  previously had no culture. Use `CultureInfo.GetCultureInfo("pt-BR")` (or another
+  comma culture) for inputs that use a comma as the decimal separator.
+- Replace `DecimalMode.Metric` with `DecimalMode.Si`.
+
 ## [0.6.0] - 2026-10-04
 
 ### Changed
