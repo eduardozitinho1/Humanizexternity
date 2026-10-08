@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.1.0] – 2026-10-08
+
+### Added
+- Scientific notation support for single-value measurements, including
+  positive and negative exponents and culture-specific decimal separators.
+
 ## [1.0.1] - 2026-10-08
 
 ### Fixed
