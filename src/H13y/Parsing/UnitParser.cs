@@ -22,9 +22,9 @@ namespace H13y;
 /// </remarks>
 public static class UnitParser
 {
-    private static readonly Regex SinglePattern = new(
-        @"^(?<value>[-+]?\d+(?:[.,]\d+)?)\s*(?<unit>[°A-Za-z0-9/]+)?$",
-        RegexOptions.Compiled | RegexOptions.CultureInvariant);
+private static readonly Regex SinglePattern = new(
+    @"^(?<value>[-+]?\d+(?:[.,]\d+)?(?:[eE][+-]?\d+)?)\s*(?<unit>[°A-Za-z0-9/]+)?$",
+    RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
     private static readonly Regex CompoundPattern = new(
         @"^\s*(?:(?<value>[-+]?\d+(?:[.,]\d+)?)\s*(?<unit>[A-Za-z]+)\s*){2,}$",
@@ -45,6 +45,7 @@ public static class UnitParser
         ArgumentNullException.ThrowIfNull(culture);
 
         var trimmed = text.Trim();
+
         if (trimmed.Length == 0)
             throw new FormatException("Input is empty.");
 
@@ -55,22 +56,30 @@ public static class UnitParser
             return colon;
 
         var match = SinglePattern.Match(trimmed);
+
         if (!match.Success)
             throw new FormatException($"Could not parse '{text}'.");
 
         var valueText = match.Groups["value"].Value;
+
         if (!double.TryParse(valueText, NumberStyles.Float, culture, out var value))
             throw new FormatException($"Could not parse number '{valueText}'.");
 
         var symbol = match.Groups["unit"].Value;
+
         var unit = UnitAliases.Resolve(symbol)
             ?? throw new FormatException($"Unknown unit '{symbol}'.");
 
         return new Measure(value, unit);
     }
 
-    /// <summary>Attempts to parse a human-readable string into a <see cref="Measure"/> without throwing.</summary>
-    public static bool TryParse(string text, CultureInfo culture, out Measure measure)
+    /// <summary>
+    /// Attempts to parse a human-readable string into a <see cref="Measure"/> without throwing.
+    /// </summary>
+    public static bool TryParse(
+        string text,
+        CultureInfo culture,
+        out Measure measure)
     {
         try
         {
@@ -82,30 +91,53 @@ public static class UnitParser
             measure = default;
             return false;
         }
+        catch (ArgumentNullException)
+        {
+            measure = default;
+            return false;
+        }
     }
 
-    private static bool TryParseCompoundDuration(string text, CultureInfo culture, out Measure measure)
+    private static bool TryParseCompoundDuration(
+        string text,
+        CultureInfo culture,
+        out Measure measure)
     {
         measure = default;
+
         var match = CompoundPattern.Match(text);
-        if (!match.Success) return false;
+
+        if (!match.Success)
+            return false;
 
         var valueCaptures = match.Groups["value"].Captures;
         var unitCaptures = match.Groups["unit"].Captures;
 
-        if (valueCaptures.Count != unitCaptures.Count || valueCaptures.Count < 2)
+        if (valueCaptures.Count != unitCaptures.Count ||
+            valueCaptures.Count < 2)
+        {
             return false;
+        }
 
         double totalSeconds = 0;
 
         for (int i = 0; i < valueCaptures.Count; i++)
         {
             var valueText = valueCaptures[i].Value;
-            if (!double.TryParse(valueText, NumberStyles.Float, culture, out var value))
+
+            if (!double.TryParse(
+                    valueText,
+                    NumberStyles.Float,
+                    culture,
+                    out var value))
+            {
                 return false;
+            }
 
             var unit = ResolveTimeUnit(unitCaptures[i].Value);
-            if (unit is null) return false;
+
+            if (unit is null)
+                return false;
 
             totalSeconds += value * unit.Factor;
         }
@@ -114,26 +146,61 @@ public static class UnitParser
         return true;
     }
 
-    private static bool TryParseColonDuration(string text, out Measure measure)
+    private static bool TryParseColonDuration(
+        string text,
+        out Measure measure)
     {
         measure = default;
-        var match = ColonPattern.Match(text);
-        if (!match.Success) return false;
 
-        if (!double.TryParse(match.Groups["a"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var a))
+        var match = ColonPattern.Match(text);
+
+        if (!match.Success)
             return false;
-        if (!double.TryParse(match.Groups["b"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var b))
+
+        if (!double.TryParse(
+                match.Groups["a"].Value,
+                NumberStyles.Integer,
+                CultureInfo.InvariantCulture,
+                out var a))
+        {
+            return false;
+        }
+
+        if (!double.TryParse(
+                match.Groups["b"].Value,
+                NumberStyles.Integer,
+                CultureInfo.InvariantCulture,
+                out var b))
+        {
+            return false;
+        }
+
+        if (b >= 60)
             return false;
 
         if (match.Groups["c"].Success)
         {
-            if (!double.TryParse(match.Groups["c"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var c))
+            if (!double.TryParse(
+                    match.Groups["c"].Value,
+                    NumberStyles.Integer,
+                    CultureInfo.InvariantCulture,
+                    out var c))
+            {
                 return false;
-            measure = new Measure(a * 3600 + b * 60 + c, Units.Time.Second);
+            }
+
+            if (c >= 60)
+                return false;
+
+            measure = new Measure(
+                a * 3600 + b * 60 + c,
+                Units.Time.Second);
         }
         else
         {
-            measure = new Measure(a * 60 + b, Units.Time.Second);
+            measure = new Measure(
+                a * 60 + b,
+                Units.Time.Second);
         }
 
         return true;
@@ -142,11 +209,17 @@ public static class UnitParser
     private static Unit? ResolveTimeUnit(string symbol)
     {
         var unit = UnitAliases.Resolve(symbol);
+
         if (unit is not null && unit.Dimension == Dimension.Time)
             return unit;
 
-        if (string.Equals(symbol, "m", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(
+                symbol,
+                "m",
+                StringComparison.OrdinalIgnoreCase))
+        {
             return Units.Time.Minute;
+        }
 
         return null;
     }

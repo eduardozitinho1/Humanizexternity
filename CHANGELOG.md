@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.1] - 2026-10-08
+
+### Fixed
+- Return false from UnitParser.TryParse when text or culture is null.
+- Reject colon-formatted durations with minutes or seconds outside the valid range.
+
+### Tests
+- Add regression tests for null arguments and invalid colon durations.
+
 ## [1.0.0] - 2026-10-04
 
 ### Changed (breaking)
