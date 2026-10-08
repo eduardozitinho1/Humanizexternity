@@ -29,4 +29,63 @@ public class ParsingTests
     {
         Assert.Throws<FormatException>(() => UnitParser.Parse("1 xyz", CultureInfo.InvariantCulture));
     }
+[Theory]
+[InlineData("1:99")]
+[InlineData("1:30:99")]
+[InlineData("1:99:30")]
+public void TryParse_rejects_invalid_colon_durations(string input)
+{
+    Assert.False(
+        UnitParser.TryParse(
+            input,
+            CultureInfo.InvariantCulture,
+            out _));
+}
+
+[Fact]
+public void TryParse_returns_false_for_null_text()
+{
+    Assert.False(
+        UnitParser.TryParse(
+            null!,
+            CultureInfo.InvariantCulture,
+            out _));
+}
+
+[Fact]
+public void TryParse_returns_false_for_null_culture()
+{
+    Assert.False(
+        UnitParser.TryParse(
+            "1 GB",
+            null!,
+            out _));
+}
+[Theory]
+[InlineData("1.5e3 g", 1500, "g")]
+[InlineData("2E6 B", 2000000, "B")]
+[InlineData("2.5e-3 kg", 0.0025, "kg")]
+public void Parse_supports_scientific_notation(
+    string input,
+    double expectedValue,
+    string expectedUnit)
+{
+    var measure = UnitParser.Parse(
+        input,
+        CultureInfo.InvariantCulture);
+
+    Assert.Equal(expectedValue, measure.Value);
+    Assert.Equal(expectedUnit, measure.Unit.Symbol);
+}
+
+[Fact]
+public void Parse_supports_scientific_notation_with_comma_culture()
+{
+    var culture = CultureInfo.GetCultureInfo("pt-BR");
+
+    var measure = UnitParser.Parse("1,5e3 g", culture);
+
+    Assert.Equal(1500, measure.Value);
+    Assert.Equal("g", measure.Unit.Symbol);
+}
 }
