@@ -6,7 +6,7 @@ namespace H13y;
 /// <summary>
 /// Short facade over the most common humanization, conversion, and parsing calls.
 /// </summary>
-public static class H
+public static partial class H
 {
     public static string Bytes(long bytes, HumanizeOptions? options = null) =>
         DataSize.FromBytes(bytes).Humanize(options);
