@@ -84,7 +84,7 @@ public static class HumanizeFormatter
                 : Combine(days, "d", opts);
         }
 
-        int weeks = (int)(seconds / 604800);
+        double weeks = Math.Floor(seconds / 604800);
         int daysLeft = (int)((seconds % 604800) / 86400);
         return daysLeft > 0
             ? $"{Combine(weeks, "w", opts)}{joinSeparator}{Combine(daysLeft, "d", opts)}"
