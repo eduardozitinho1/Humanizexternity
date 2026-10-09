@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.0] - 2026-10-09
+
+### Added
+- `UnitStyle` enum (`Symbol`, `FullName`) and `HumanizeOptions.UnitStyle` to control
+  whether unit labels are rendered as compact symbols (`"kg"`) or full English names
+  (`"kilogram"`).
+- `HumanizeOptions.Pluralize` (default `true`) to enable or disable pluralization
+  when using `UnitStyle.FullName`.
+- `H.RelativeTime(DateTime | DateTimeOffset, now?, options?)` for relative-time
+  phrasing such as `"5 minutes ago"`, `"in 2 hours"`, and `"just now"`.
+
+### Changed
+- Default output is unchanged; `UnitStyle.Symbol` remains the default.
+
 ## [v1.1.0] – 2026-10-08
 
 ### Added

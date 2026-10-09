@@ -143,6 +143,33 @@ H.Bytes(1536, opts);                                  // "1.5 KB"
 H.Bytes(1536, opts with { UseIecSymbols = true });    // "1.5 KiB"
 ```
 
+## Full unit names and pluralization
+
+```csharp
+var full = new HumanizeOptions { UnitStyle = UnitStyle.FullName };
+
+H.Grams(1, full);              // "1 gram"
+H.Grams(1.5, full);            // "1.5 kilograms"
+H.Bytes(1073741824, full);     // "1 gigabyte"
+H.Bytes(2147483648, full);     // "2 gigabytes"
+H.Seconds(3661, full);         // "1 hour 1 minute 1 second"
+H.Celsius(25, full);           // "25 degrees Celsius"
+```
+
+`Pluralize = false` on `HumanizeOptions` disables the automatic plural.
+
+## Relative time
+
+```csharp
+H.RelativeTime(DateTime.UtcNow.AddMinutes(-5));   // "5 minutes ago"
+H.RelativeTime(DateTime.UtcNow.AddHours(2));      // "in 2 hours"
+H.RelativeTime(DateTime.UtcNow.AddSeconds(-10));  // "just now"
+H.RelativeTime(DateTime.UtcNow.AddDays(1));       // "in 1 day"
+```
+
+Pass a reference time as the second argument to make the output deterministic
+(useful in tests). Both `DateTime` and `DateTimeOffset` overloads are available.
+
 ## IFormattable
 
 ```csharp
