@@ -1,6 +1,6 @@
+using System.Globalization;
 using H13y.Measures;
 using Xunit;
-using System.Globalization;
 
 namespace H13y.Tests;
 
@@ -84,7 +84,9 @@ public class TimeSpanTests
     [Fact]
     public void ParseTimeSpan_throws_for_non_time_dimension()
     {
-        Assert.Throws<FormatException>(() => H.ParseTimeSpan("1.5 kg", CultureInfo.InvariantCulture));
+        Assert.Throws<FormatException>(() =>
+            H.ParseTimeSpan("1.5 kg", CultureInfo.InvariantCulture)
+        );
     }
 
     [Fact]
@@ -113,5 +115,25 @@ public class TimeSpanTests
         var d = Duration.FromTimeSpan(original);
         Assert.Equal(8.0 / 7.0, d.ToWeeks(), precision: 6);
         Assert.Equal(original, d.ToTimeSpan());
+    }
+
+    [Theory]
+    [InlineData(-0.5, "-500 ms")]
+    [InlineData(-30, "-30 s")]
+    [InlineData(-90, "-1 min 30 s")]
+    [InlineData(-3661, "-1 h 1 min 1 s")]
+    public void Negative_durations_humanize_correctly(double seconds, string expected)
+    {
+        var duration = Duration.FromSeconds(seconds);
+
+        Assert.Equal(expected, duration.Humanize());
+    }
+
+    [Fact]
+    public void Negative_duration_respects_spacing_options()
+    {
+        var options = new HumanizeOptions { SpaceBetweenValueAndUnit = false };
+
+        Assert.Equal("-30s", Duration.FromSeconds(-30).Humanize(options));
     }
 }

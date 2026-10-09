@@ -10,9 +10,15 @@ namespace H13y.Json;
 /// </summary>
 public sealed class TemperatureConverter : JsonConverter<Temperature>
 {
-    public override Temperature Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        => new(reader.GetDouble());
+    public override Temperature Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    ) => new(reader.GetDouble());
 
-    public override void Write(Utf8JsonWriter writer, Temperature value, JsonSerializerOptions options)
-        => writer.WriteNumberValue(value.Kelvin);
+    public override void Write(
+        Utf8JsonWriter writer,
+        Temperature value,
+        JsonSerializerOptions options
+    ) => writer.WriteNumberValue(value.Kelvin);
 }

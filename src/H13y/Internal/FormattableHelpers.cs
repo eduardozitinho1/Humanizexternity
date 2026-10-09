@@ -18,7 +18,12 @@ namespace H13y;
 /// </remarks>
 internal static class FormattableHelpers
 {
-    public static string FormatScalar(double baseValue, Dimension dimension, string? format, IFormatProvider? provider)
+    public static string FormatScalar(
+        double baseValue,
+        Dimension dimension,
+        string? format,
+        IFormatProvider? provider
+    )
     {
         var culture = provider as CultureInfo ?? CultureInfo.InvariantCulture;
 
@@ -75,7 +80,9 @@ internal static class FormattableHelpers
                 "C" => TemperatureScale.Celsius,
                 "F" => TemperatureScale.Fahrenheit,
                 "K" => TemperatureScale.Kelvin,
-                _ => throw new FormatException($"Unknown temperature scale in format string: '{format}'"),
+                _ => throw new FormatException(
+                    $"Unknown temperature scale in format string: '{format}'"
+                ),
             };
             var opts = HumanizeOptions.Default with { Culture = culture };
             return TemperatureFormatter.Format(kelvin, scale, opts);

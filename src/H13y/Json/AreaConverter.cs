@@ -10,9 +10,12 @@ namespace H13y.Json;
 /// </summary>
 public sealed class AreaConverter : JsonConverter<Area>
 {
-    public override Area Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        => new(reader.GetDouble());
+    public override Area Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    ) => new(reader.GetDouble());
 
-    public override void Write(Utf8JsonWriter writer, Area value, JsonSerializerOptions options)
-        => writer.WriteNumberValue(value.SquareMeters);
+    public override void Write(Utf8JsonWriter writer, Area value, JsonSerializerOptions options) =>
+        writer.WriteNumberValue(value.SquareMeters);
 }

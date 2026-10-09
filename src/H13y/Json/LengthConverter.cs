@@ -10,9 +10,15 @@ namespace H13y.Json;
 /// </summary>
 public sealed class LengthConverter : JsonConverter<Length>
 {
-    public override Length Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        => new(reader.GetDouble());
+    public override Length Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    ) => new(reader.GetDouble());
 
-    public override void Write(Utf8JsonWriter writer, Length value, JsonSerializerOptions options)
-        => writer.WriteNumberValue(value.Meters);
+    public override void Write(
+        Utf8JsonWriter writer,
+        Length value,
+        JsonSerializerOptions options
+    ) => writer.WriteNumberValue(value.Meters);
 }

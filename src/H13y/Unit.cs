@@ -17,14 +17,15 @@ public sealed record Unit(
     double Factor,
     Dimension Dimension,
     double Offset = 0,
-    string? IecSymbol = null)
+    string? IecSymbol = null
+)
 {
     /// <summary>
     /// Returns the symbol to display, honoring the IEC preference.
     /// </summary>
     /// <param name="useIec">When true and <see cref="IecSymbol"/> is set, returns it; otherwise returns <see cref="Symbol"/>.</param>
-    public string DisplaySymbol(bool useIec)
-        => useIec && IecSymbol is not null ? IecSymbol : Symbol;
+    public string DisplaySymbol(bool useIec) =>
+        useIec && IecSymbol is not null ? IecSymbol : Symbol;
 
     /// <summary>Returns the unit's <see cref="Symbol"/> so it prints cleanly in logs.</summary>
     public override string ToString() => Symbol;

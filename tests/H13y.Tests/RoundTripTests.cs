@@ -1,6 +1,6 @@
+using System.Globalization;
 using H13y.Measures;
 using Xunit;
-using System.Globalization;
 
 namespace H13y.Tests;
 
@@ -143,7 +143,11 @@ public class RoundTripTests
     public void Convert_temperature_round_trip()
     {
         var celsius = 25.0;
-        var fahrenheit = H.Convert(celsius, Units.Temperature.Celsius, Units.Temperature.Fahrenheit);
+        var fahrenheit = H.Convert(
+            celsius,
+            Units.Temperature.Celsius,
+            Units.Temperature.Fahrenheit
+        );
         var back = H.Convert(fahrenheit, Units.Temperature.Fahrenheit, Units.Temperature.Celsius);
         Assert.Equal(celsius, back, precision: 6);
     }
@@ -154,7 +158,9 @@ public class RoundTripTests
     public void TryParseDataSize_round_trip()
     {
         var original = DataSize.FromMegabytes(512);
-        Assert.True(H.TryParseDataSize(original.Humanize(), CultureInfo.InvariantCulture, out var restored));
+        Assert.True(
+            H.TryParseDataSize(original.Humanize(), CultureInfo.InvariantCulture, out var restored)
+        );
         Assert.Equal(original.Bytes, restored.Bytes);
     }
 
@@ -162,7 +168,9 @@ public class RoundTripTests
     public void TryParseMass_round_trip()
     {
         var original = Mass.FromKilograms(2);
-        Assert.True(H.TryParseMass(original.Humanize(), CultureInfo.InvariantCulture, out var restored));
+        Assert.True(
+            H.TryParseMass(original.Humanize(), CultureInfo.InvariantCulture, out var restored)
+        );
         Assert.Equal(original.Grams, restored.Grams, precision: 4);
     }
 
@@ -170,7 +178,13 @@ public class RoundTripTests
     public void TryParseTemperature_round_trip()
     {
         var original = Temperature.FromCelsius(100);
-        Assert.True(H.TryParseTemperature(original.Humanize(), CultureInfo.InvariantCulture, out var restored));
+        Assert.True(
+            H.TryParseTemperature(
+                original.Humanize(),
+                CultureInfo.InvariantCulture,
+                out var restored
+            )
+        );
         Assert.Equal(original.Kelvin, restored.Kelvin, precision: 2);
     }
 }

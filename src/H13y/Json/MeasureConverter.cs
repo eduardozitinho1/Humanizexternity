@@ -1,6 +1,6 @@
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Globalization;
 
 namespace H13y.Json;
 
@@ -17,7 +17,11 @@ namespace H13y.Json;
 /// </remarks>
 public sealed class MeasureConverter : JsonConverter<Measure>
 {
-    public override Measure Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override Measure Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
     {
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("Expected a JSON object for Measure.");
@@ -50,7 +54,10 @@ public sealed class MeasureConverter : JsonConverter<Measure>
         if (unitSymbol is null)
             throw new JsonException("Measure JSON is missing the 'unit' field.");
 
-        var parsed = UnitParser.Parse($"{value.ToString(CultureInfo.InvariantCulture)} {unitSymbol}", CultureInfo.InvariantCulture);
+        var parsed = UnitParser.Parse(
+            $"{value.ToString(CultureInfo.InvariantCulture)} {unitSymbol}",
+            CultureInfo.InvariantCulture
+        );
         return parsed;
     }
 

@@ -25,9 +25,6 @@ public static partial class Units
         /// <summary>Standard atmosphere — 101,325 pascals.</summary>
         public static readonly Unit Atmosphere = new("atm", 101_325, Dimension.Pressure);
 
-        internal static readonly Unit[] All =
-        [
-            Pascal, Kilopascal, Megapascal, Bar,
-        ];
+        internal static readonly Unit[] All = [Pascal, Kilopascal, Megapascal, Bar];
     }
 }

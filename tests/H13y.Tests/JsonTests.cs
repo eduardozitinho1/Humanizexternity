@@ -1,8 +1,8 @@
+using System.Globalization;
 using System.Text.Json;
 using H13y.Json;
 using H13y.Measures;
 using Xunit;
-using System.Globalization;
 
 namespace H13y.Tests;
 
@@ -33,7 +33,8 @@ public class JsonTests
     {
         var json = "{\"value\":1.5}";
         Assert.Throws<JsonException>(() =>
-            JsonSerializer.Deserialize<Measure>(json, H13yJson.Options));
+            JsonSerializer.Deserialize<Measure>(json, H13yJson.Options)
+        );
     }
 
     // === DataSize ===

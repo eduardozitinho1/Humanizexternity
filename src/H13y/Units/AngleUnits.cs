@@ -24,6 +24,6 @@ public static partial class Units
         /// <summary>Turn — 2π radians (one full rotation).</summary>
         public static readonly Unit Turn = new("turn", 2 * Math.PI, Dimension.Angle);
 
-        internal static readonly Unit[] All = [ Degree ];
+        internal static readonly Unit[] All = [Degree];
     }
 }

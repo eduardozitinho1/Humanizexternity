@@ -10,9 +10,15 @@ namespace H13y.Json;
 /// </summary>
 public sealed class DataSizeConverter : JsonConverter<DataSize>
 {
-    public override DataSize Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        => new(reader.GetInt64());
+    public override DataSize Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    ) => new(reader.GetInt64());
 
-    public override void Write(Utf8JsonWriter writer, DataSize value, JsonSerializerOptions options)
-        => writer.WriteNumberValue(value.Bytes);
+    public override void Write(
+        Utf8JsonWriter writer,
+        DataSize value,
+        JsonSerializerOptions options
+    ) => writer.WriteNumberValue(value.Bytes);
 }

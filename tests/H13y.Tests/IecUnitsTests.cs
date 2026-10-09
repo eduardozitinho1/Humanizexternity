@@ -1,6 +1,6 @@
+using System.Globalization;
 using H13y.Measures;
 using Xunit;
-using System.Globalization;
 
 namespace H13y.Tests;
 

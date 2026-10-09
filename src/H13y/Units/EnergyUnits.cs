@@ -33,9 +33,6 @@ public static partial class Units
         /// <summary>Kilowatt-hour — 3,600,000 joules.</summary>
         public static readonly Unit KilowattHour = new("kWh", 3_600_000, Dimension.Energy);
 
-        internal static readonly Unit[] All =
-        [
-            Joule, Kilojoule, Megajoule, KilowattHour,
-        ];
+        internal static readonly Unit[] All = [Joule, Kilojoule, Megajoule, KilowattHour];
     }
 }

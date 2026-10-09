@@ -37,11 +37,9 @@ public static partial class Units
     /// <remarks>
     /// The result is a precomputed array, so this call is allocation-free.
     /// </remarks>
-    public static IReadOnlyList<Unit> ByDimension(Dimension dimension)
-        => ByDimensionMap.TryGetValue(dimension, out var units) ? units : Array.Empty<Unit>();
+    public static IReadOnlyList<Unit> ByDimension(Dimension dimension) =>
+        ByDimensionMap.TryGetValue(dimension, out var units) ? units : Array.Empty<Unit>();
 
-    private static Dictionary<Dimension, Unit[]> BuildMap()
-        => AllUnits
-            .GroupBy(u => u.Dimension)
-            .ToDictionary(g => g.Key, g => g.ToArray());
+    private static Dictionary<Dimension, Unit[]> BuildMap() =>
+        AllUnits.GroupBy(u => u.Dimension).ToDictionary(g => g.Key, g => g.ToArray());
 }

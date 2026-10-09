@@ -10,9 +10,15 @@ namespace H13y.Json;
 /// </summary>
 public sealed class DurationConverter : JsonConverter<Duration>
 {
-    public override Duration Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        => new(reader.GetDouble());
+    public override Duration Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    ) => new(reader.GetDouble());
 
-    public override void Write(Utf8JsonWriter writer, Duration value, JsonSerializerOptions options)
-        => writer.WriteNumberValue(value.Seconds);
+    public override void Write(
+        Utf8JsonWriter writer,
+        Duration value,
+        JsonSerializerOptions options
+    ) => writer.WriteNumberValue(value.Seconds);
 }

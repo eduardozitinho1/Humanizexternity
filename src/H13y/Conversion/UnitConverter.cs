@@ -30,7 +30,8 @@ public static class UnitConverter
 
         if (from.Dimension != to.Dimension)
             throw new ArgumentException(
-                $"Cannot convert between '{from.Symbol}' ({from.Dimension}) and '{to.Symbol}' ({to.Dimension}).");
+                $"Cannot convert between '{from.Symbol}' ({from.Dimension}) and '{to.Symbol}' ({to.Dimension})."
+            );
 
         var baseValue = value * from.Factor + from.Offset;
         return (baseValue - to.Offset) / to.Factor;

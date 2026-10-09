@@ -22,9 +22,6 @@ public static partial class Units
         /// <summary>Mechanical horsepower — 745.7 watts.</summary>
         public static readonly Unit Horsepower = new("hp", 745.7, Dimension.Power);
 
-        internal static readonly Unit[] All =
-        [
-            Watt, Kilowatt, Megawatt, Gigawatt,
-        ];
+        internal static readonly Unit[] All = [Watt, Kilowatt, Megawatt, Gigawatt];
     }
 }
