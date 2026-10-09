@@ -23,7 +23,7 @@ namespace H13y;
 public static class UnitParser
 {
     private static readonly Regex SinglePattern = new(
-        @"^(?<value>[-+]?\d+(?:[.,]\d+)?(?:[eE][+-]?\d+)?)\s*(?<unit>[°A-Za-z0-9/]+)?$",
+        @"^(?<value>[-+]?\d+(?:[.,]\d+)?(?:[eE][+-]?\d+)?)\s*(?<unit>[°A-Za-z0-9/ _-]+)?$",
         RegexOptions.Compiled | RegexOptions.CultureInvariant
     );
 

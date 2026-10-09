@@ -23,7 +23,33 @@ internal static class UnitAliases
         if (SymbolMap.TryGetValue(key, out var exactUnit))
             return exactUnit;
 
-        return AliasMap.TryGetValue(key, out var aliasUnit) ? aliasUnit : null;
+        if (AliasMap.TryGetValue(key, out var aliasUnit))
+            return aliasUnit;
+
+        var normalized = Normalize(key);
+        if (!string.Equals(normalized, key, StringComparison.OrdinalIgnoreCase)
+            && AliasMap.TryGetValue(normalized, out var normalizedUnit))
+        {
+            return normalizedUnit;
+        }
+
+        return null;
+    }
+
+    private static string Normalize(string input)
+    {
+        Span<char> buffer = stackalloc char[input.Length];
+        var length = 0;
+
+        foreach (var c in input)
+        {
+            if (c is ' ' or '-' or '_' or '\t')
+                continue;
+
+            buffer[length++] = char.ToLowerInvariant(c);
+        }
+
+        return new string(buffer[..length]);
     }
 
     private static (Dictionary<string, Unit> Symbols, Dictionary<string, Unit> Aliases) BuildMaps()
@@ -80,23 +106,34 @@ internal static class UnitAliases
         Add(Units.Volume.CubicMeter, "cubicmeter", "cubicmeters", "cubicmetre", "cubicmetres");
 
         // Area
-        Add(Units.Area.SquareMillimeter, "squaremillimeter", "squaremillimeters");
-        Add(Units.Area.SquareCentimeter, "squarecentimeter", "squarecentimeters");
-        Add(Units.Area.SquareMeter, "squaremeter", "squaremeters", "squaremetre", "squaremetres");
-        Add(Units.Area.Hectare, "hectares");
-        Add(Units.Area.SquareKilometer, "squarekilometer", "squarekilometers");
+        Add(Units.Area.SquareMillimeter, "squaremillimeter", "squaremillimeters",
+            "squaremillimetre", "squaremillimetres");
+        Add(Units.Area.SquareCentimeter, "squarecentimeter", "squarecentimeters",
+            "squarecentimetre", "squarecentimetres");
+        Add(Units.Area.SquareMeter, "squaremeter", "squaremeters",
+            "squaremetre", "squaremetres");
+        Add(Units.Area.Hectare, "hectare", "hectares");
+        Add(Units.Area.SquareKilometer, "squarekilometer", "squarekilometers",
+            "squarekilometre", "squarekilometres");
 
         // Temperature
-        Add(Units.Temperature.Celsius, "c", "celsius", "centigrade", "°c");
-        Add(Units.Temperature.Fahrenheit, "f", "fahrenheit", "°f");
+        Add(Units.Temperature.Celsius, "c", "celsius", "centigrade", "°c",
+            "degreecelsius", "degreescelsius");
+        Add(Units.Temperature.Fahrenheit, "f", "fahrenheit", "°f",
+            "degreefahrenheit", "degreesfahrenheit");
         Add(Units.Temperature.Kelvin, "k", "kelvin");
 
         // Speed
-        Add(Units.Speed.MeterPerSecond, "mps", "meterspersecond");
-        Add(Units.Speed.KilometerPerHour, "kmh", "kph", "kilometersperhour", "kilometresperhour");
-        Add(Units.Speed.MilePerHour, "milesperhour");
-        Add(Units.Speed.Knot, "knots", "kt");
-        Add(Units.Speed.FootPerSecond, "fps", "feetpersecond");
+        Add(Units.Speed.MeterPerSecond, "mps",
+            "meterpersecond", "meterspersecond");
+        Add(Units.Speed.KilometerPerHour, "kmh", "kph",
+            "kilometerperhour", "kilometersperhour",
+            "kilometreperhour", "kilometresperhour");
+        Add(Units.Speed.MilePerHour,
+            "mileperhour", "milesperhour");
+        Add(Units.Speed.Knot, "knot", "knots", "kt");
+        Add(Units.Speed.FootPerSecond, "fps",
+            "footpersecond", "feetpersecond");
 
         // Energy
         Add(Units.Energy.Joule, "joule", "joules");
@@ -119,7 +156,7 @@ internal static class UnitAliases
         Add(Units.Pressure.Kilopascal, "kilopascal", "kilopascals");
         Add(Units.Pressure.Megapascal, "megapascal", "megapascals");
         Add(Units.Pressure.Bar, "bars");
-        Add(Units.Pressure.Psi, "poundspersquareinch");
+        Add(Units.Pressure.Psi, "poundpersquareinch", "poundspersquareinch");
         Add(Units.Pressure.Atmosphere, "atmospheres");
 
         // Frequency
