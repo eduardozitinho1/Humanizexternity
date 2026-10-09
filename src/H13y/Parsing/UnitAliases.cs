@@ -5,27 +5,44 @@ namespace H13y;
 /// </summary>
 internal static class UnitAliases
 {
-    private static readonly Dictionary<string, Unit> Map = BuildMap();
+    private static readonly Dictionary<string, Unit> SymbolMap;
+    private static readonly Dictionary<string, Unit> AliasMap;
+
+    static UnitAliases()
+    {
+        (SymbolMap, AliasMap) = BuildMaps();
+    }
 
     public static Unit? Resolve(string symbol)
     {
         if (string.IsNullOrWhiteSpace(symbol))
             return null;
 
-        return Map.TryGetValue(symbol.Trim(), out var unit) ? unit : null;
+        var key = symbol.Trim();
+
+        if (SymbolMap.TryGetValue(key, out var exactUnit))
+            return exactUnit;
+
+        return AliasMap.TryGetValue(key, out var aliasUnit) ? aliasUnit : null;
     }
 
-    private static Dictionary<string, Unit> BuildMap()
+    private static (Dictionary<string, Unit> Symbols, Dictionary<string, Unit> Aliases) BuildMaps()
     {
-        var map = new Dictionary<string, Unit>(StringComparer.OrdinalIgnoreCase);
+        var symbols = new Dictionary<string, Unit>(StringComparer.Ordinal);
+        var aliasesMap = new Dictionary<string, Unit>(StringComparer.OrdinalIgnoreCase);
 
         void Add(Unit unit, params string[] aliases)
         {
-            map[unit.Symbol] = unit;
+            symbols[unit.Symbol] = unit;
+
             if (unit.IecSymbol is not null)
-                map[unit.IecSymbol] = unit;
+            {
+                symbols[unit.IecSymbol] = unit;
+                aliasesMap[unit.IecSymbol] = unit;
+            }
+
             foreach (var alias in aliases)
-                map[alias] = unit;
+                aliasesMap[alias] = unit;
         }
 
         // Data
@@ -117,6 +134,6 @@ internal static class UnitAliases
         Add(Units.Angle.Gradian, "gradians");
         Add(Units.Angle.Turn, "turns", "revolution", "revolutions");
 
-        return map;
+        return (symbols, aliasesMap);
     }
 }
