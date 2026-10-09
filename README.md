@@ -7,7 +7,7 @@
 
 Humanize any measure. `1024 MB` → `1 GB`. `1500 g` → `1.5 kg`. `3661 s` → `1 h 1 min 1 s`. `120 km/h` stays `120 km/h`. `3.6 MJ` → `1 kWh`.
 
-A small, dependency-free C# library for turning raw numeric values into compact, human-readable strings, and for parsing those strings back into structured values. Built for .NET 10.
+A small C# library for turning raw numeric values into compact, human-readable strings, and for parsing those strings back into structured values. Built for .NET 10.
 
 ## Install
 
@@ -169,6 +169,40 @@ H.RelativeTime(DateTime.UtcNow.AddDays(1));       // "in 1 day"
 
 Pass a reference time as the second argument to make the output deterministic
 (useful in tests). Both `DateTime` and `DateTimeOffset` overloads are available.
+
+## Localization
+
+The library ships built-in English strings. To translate unit names and
+relative-time phrases, pass an `IStringLocalizer` (from
+[`Microsoft.Extensions.Localization.Abstractions`](https://www.nuget.org/packages/Microsoft.Extensions.Localization.Abstractions))
+via `HumanizeOptions.Localizer`.
+
+Keys follow `LocalizationKeys`:
+
+| Key | Meaning |
+|---|---|
+| `Unit_{symbol}_Singular` | Singular unit name (`Unit_kg_Singular` = "quilograma") |
+| `Unit_{symbol}_Plural` | Plural unit name (`Unit_kg_Plural` = "quilogramas") |
+| `RelativeTime_Now` | "just now" |
+| `RelativeTime_Moment` | "in a moment" |
+| `RelativeTime_Ago` | "{0} ago" — template with one argument |
+| `RelativeTime_In` | "in {0}" — template with one argument |
+
+Missing keys fall back to the built-in English strings, so translations can be
+added incrementally.
+
+```csharp
+var opts = new HumanizeOptions
+{
+    UnitStyle = UnitStyle.FullName,
+    Culture   = new CultureInfo("pt-BR"),
+    Localizer = localizer, // your IStringLocalizer
+};
+
+H.Grams(1500, opts);                                            // "1,5 quilogramas"
+H.Seconds(3661, opts);                                          // "1 hora 1 minuto 1 segundo"
+H.RelativeTime(DateTime.UtcNow.AddMinutes(-5), options: opts);  // "há 5 minutos"
+```
 
 ## IFormattable
 

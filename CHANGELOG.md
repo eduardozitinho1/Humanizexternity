@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.3.0] - 2026-10-09
+
+### Added
+- Localization through `Microsoft.Extensions.Localization.Abstractions`.
+  `HumanizeOptions.Localizer` accepts an `IStringLocalizer` whose keys follow
+  `LocalizationKeys` (`Unit_{symbol}_Singular` / `_Plural`,
+  `RelativeTime_Now` / `_Moment` / `_Ago` / `_In`).
+- Relative-time phrases go through the localizer, including the
+  `{0} ago` / `in {0}` templates, so sentence order can be adapted per language.
+- New dependency: `Microsoft.Extensions.Localization.Abstractions` (interfaces only).
+
+### Changed
+- `UnitNames.Resolve` (internal) gained an `IStringLocalizer?` parameter.
+- Missing keys fall back to the built-in English strings.
+
 ## [1.2.0] - 2026-10-09
 
 ### Added
