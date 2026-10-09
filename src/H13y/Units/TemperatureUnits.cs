@@ -29,14 +29,12 @@ public static partial class Units
             "°F",
             5.0 / 9.0,
             Dimension.Temperature,
-            273.15 - 32 * 5.0 / 9.0);
+            273.15 - 32 * 5.0 / 9.0
+        );
 
         /// <summary>Kelvin — the SI base unit of temperature. Absolute zero is 0 K.</summary>
         public static readonly Unit Kelvin = new("K", 1, Dimension.Temperature, 0);
 
-        internal static readonly Unit[] All =
-        [
-            Celsius, Fahrenheit, Kelvin,
-        ];
+        internal static readonly Unit[] All = [Celsius, Fahrenheit, Kelvin];
     }
 }

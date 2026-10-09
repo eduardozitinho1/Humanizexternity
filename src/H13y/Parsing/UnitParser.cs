@@ -22,17 +22,20 @@ namespace H13y;
 /// </remarks>
 public static class UnitParser
 {
-private static readonly Regex SinglePattern = new(
-    @"^(?<value>[-+]?\d+(?:[.,]\d+)?(?:[eE][+-]?\d+)?)\s*(?<unit>[°A-Za-z0-9/]+)?$",
-    RegexOptions.Compiled | RegexOptions.CultureInvariant);
+    private static readonly Regex SinglePattern = new(
+        @"^(?<value>[-+]?\d+(?:[.,]\d+)?(?:[eE][+-]?\d+)?)\s*(?<unit>[°A-Za-z0-9/]+)?$",
+        RegexOptions.Compiled | RegexOptions.CultureInvariant
+    );
 
     private static readonly Regex CompoundPattern = new(
         @"^\s*(?:(?<value>[-+]?\d+(?:[.,]\d+)?)\s*(?<unit>[A-Za-z]+)\s*){2,}$",
-        RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        RegexOptions.Compiled | RegexOptions.CultureInvariant
+    );
 
     private static readonly Regex ColonPattern = new(
         @"^\s*(?<a>\d+):(?<b>\d{1,2})(?::(?<c>\d{1,2}))?\s*$",
-        RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        RegexOptions.Compiled | RegexOptions.CultureInvariant
+    );
 
     /// <summary>
     /// Parses a human-readable string into a <see cref="Measure"/> using the given culture.
@@ -67,8 +70,8 @@ private static readonly Regex SinglePattern = new(
 
         var symbol = match.Groups["unit"].Value;
 
-        var unit = UnitAliases.Resolve(symbol)
-            ?? throw new FormatException($"Unknown unit '{symbol}'.");
+        var unit =
+            UnitAliases.Resolve(symbol) ?? throw new FormatException($"Unknown unit '{symbol}'.");
 
         return new Measure(value, unit);
     }
@@ -76,10 +79,7 @@ private static readonly Regex SinglePattern = new(
     /// <summary>
     /// Attempts to parse a human-readable string into a <see cref="Measure"/> without throwing.
     /// </summary>
-    public static bool TryParse(
-        string text,
-        CultureInfo culture,
-        out Measure measure)
+    public static bool TryParse(string text, CultureInfo culture, out Measure measure)
     {
         try
         {
@@ -101,7 +101,8 @@ private static readonly Regex SinglePattern = new(
     private static bool TryParseCompoundDuration(
         string text,
         CultureInfo culture,
-        out Measure measure)
+        out Measure measure
+    )
     {
         measure = default;
 
@@ -113,8 +114,7 @@ private static readonly Regex SinglePattern = new(
         var valueCaptures = match.Groups["value"].Captures;
         var unitCaptures = match.Groups["unit"].Captures;
 
-        if (valueCaptures.Count != unitCaptures.Count ||
-            valueCaptures.Count < 2)
+        if (valueCaptures.Count != unitCaptures.Count || valueCaptures.Count < 2)
         {
             return false;
         }
@@ -125,11 +125,7 @@ private static readonly Regex SinglePattern = new(
         {
             var valueText = valueCaptures[i].Value;
 
-            if (!double.TryParse(
-                    valueText,
-                    NumberStyles.Float,
-                    culture,
-                    out var value))
+            if (!double.TryParse(valueText, NumberStyles.Float, culture, out var value))
             {
                 return false;
             }
@@ -146,9 +142,7 @@ private static readonly Regex SinglePattern = new(
         return true;
     }
 
-    private static bool TryParseColonDuration(
-        string text,
-        out Measure measure)
+    private static bool TryParseColonDuration(string text, out Measure measure)
     {
         measure = default;
 
@@ -157,20 +151,26 @@ private static readonly Regex SinglePattern = new(
         if (!match.Success)
             return false;
 
-        if (!double.TryParse(
+        if (
+            !double.TryParse(
                 match.Groups["a"].Value,
                 NumberStyles.Integer,
                 CultureInfo.InvariantCulture,
-                out var a))
+                out var a
+            )
+        )
         {
             return false;
         }
 
-        if (!double.TryParse(
+        if (
+            !double.TryParse(
                 match.Groups["b"].Value,
                 NumberStyles.Integer,
                 CultureInfo.InvariantCulture,
-                out var b))
+                out var b
+            )
+        )
         {
             return false;
         }
@@ -180,11 +180,14 @@ private static readonly Regex SinglePattern = new(
 
         if (match.Groups["c"].Success)
         {
-            if (!double.TryParse(
+            if (
+                !double.TryParse(
                     match.Groups["c"].Value,
                     NumberStyles.Integer,
                     CultureInfo.InvariantCulture,
-                    out var c))
+                    out var c
+                )
+            )
             {
                 return false;
             }
@@ -192,15 +195,11 @@ private static readonly Regex SinglePattern = new(
             if (c >= 60)
                 return false;
 
-            measure = new Measure(
-                a * 3600 + b * 60 + c,
-                Units.Time.Second);
+            measure = new Measure(a * 3600 + b * 60 + c, Units.Time.Second);
         }
         else
         {
-            measure = new Measure(
-                a * 60 + b,
-                Units.Time.Second);
+            measure = new Measure(a * 60 + b, Units.Time.Second);
         }
 
         return true;
@@ -213,10 +212,7 @@ private static readonly Regex SinglePattern = new(
         if (unit is not null && unit.Dimension == Dimension.Time)
             return unit;
 
-        if (string.Equals(
-                symbol,
-                "m",
-                StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(symbol, "m", StringComparison.OrdinalIgnoreCase))
         {
             return Units.Time.Minute;
         }

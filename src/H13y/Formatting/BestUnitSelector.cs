@@ -16,15 +16,20 @@ internal static class BestUnitSelector
         if (dimension == Dimension.Temperature)
             throw new ArgumentException(
                 "Dimension.Temperature is affine, not linear. Use Temperature.Humanize or TemperatureFormatter.Format.",
-                nameof(dimension));
+                nameof(dimension)
+            );
 
         if (!DescendingCache.TryGetValue(dimension, out var candidates) || candidates.Length == 0)
-            throw new ArgumentException($"No units registered for dimension '{dimension}'.", nameof(dimension));
+            throw new ArgumentException(
+                $"No units registered for dimension '{dimension}'.",
+                nameof(dimension)
+            );
 
         if (baseValue == 0)
         {
             foreach (var unit in candidates)
-                if (unit.Factor == 1) return unit;
+                if (unit.Factor == 1)
+                    return unit;
 
             return candidates[^1];
         }
@@ -38,10 +43,8 @@ internal static class BestUnitSelector
         return candidates[^1];
     }
 
-    private static Dictionary<Dimension, Unit[]> BuildCache()
-        => Units.All
-            .GroupBy(u => u.Dimension)
-            .ToDictionary(
-                g => g.Key,
-                g => g.OrderByDescending(u => u.Factor).ToArray());
+    private static Dictionary<Dimension, Unit[]> BuildCache() =>
+        Units
+            .All.GroupBy(u => u.Dimension)
+            .ToDictionary(g => g.Key, g => g.OrderByDescending(u => u.Factor).ToArray());
 }

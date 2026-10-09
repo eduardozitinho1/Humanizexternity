@@ -29,9 +29,7 @@ internal static class NumberFormatter
 
         var rounded = Math.Round(value, maxDecimals, MidpointRounding.AwayFromZero);
 
-        var format = maxDecimals > 0
-            ? "0." + new string('#', maxDecimals)
-            : "0";
+        var format = maxDecimals > 0 ? "0." + new string('#', maxDecimals) : "0";
 
         return rounded.ToString(format, culture);
     }

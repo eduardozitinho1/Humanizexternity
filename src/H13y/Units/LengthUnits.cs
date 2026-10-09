@@ -24,9 +24,6 @@ public static partial class Units
         /// <summary>Kilometer — 1000 meters.</summary>
         public static readonly Unit Kilometer = new("km", 1000, Dimension.Length);
 
-        internal static readonly Unit[] All =
-        [
-            Millimeter, Centimeter, Meter, Kilometer,
-        ];
+        internal static readonly Unit[] All = [Millimeter, Centimeter, Meter, Kilometer];
     }
 }

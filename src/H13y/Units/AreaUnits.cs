@@ -30,7 +30,11 @@ public static partial class Units
 
         internal static readonly Unit[] All =
         [
-            SquareMillimeter, SquareCentimeter, SquareMeter, Hectare, SquareKilometer,
+            SquareMillimeter,
+            SquareCentimeter,
+            SquareMeter,
+            Hectare,
+            SquareKilometer,
         ];
     }
 }

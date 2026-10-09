@@ -31,9 +31,6 @@ public static partial class Units
         /// <summary>Week — 604800 seconds.</summary>
         public static readonly Unit Week = new("w", 604800, Dimension.Time);
 
-        internal static readonly Unit[] All =
-        [
-            Millisecond, Second, Minute, Hour, Day, Week,
-        ];
+        internal static readonly Unit[] All = [Millisecond, Second, Minute, Hour, Day, Week];
     }
 }

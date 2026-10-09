@@ -31,9 +31,6 @@ public static partial class Units
         /// <summary>Cubic meter — 1000 liters.</summary>
         public static readonly Unit CubicMeter = new("m3", 1000, Dimension.Volume);
 
-        internal static readonly Unit[] All =
-        [
-            Milliliter, Liter, CubicMeter,
-        ];
+        internal static readonly Unit[] All = [Milliliter, Liter, CubicMeter];
     }
 }

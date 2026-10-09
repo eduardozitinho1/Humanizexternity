@@ -27,6 +27,6 @@ public static partial class Units
         /// <summary>Foot per second.</summary>
         public static readonly Unit FootPerSecond = new("ft/s", 0.3048, Dimension.Speed);
 
-        internal static readonly Unit[] All = [ KilometerPerHour ];
+        internal static readonly Unit[] All = [KilometerPerHour];
     }
 }

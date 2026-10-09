@@ -1,41 +1,41 @@
+using System.Globalization;
 using H13y.Measures;
 using Xunit;
-using System.Globalization;
 
 namespace H13y.Tests;
 
 public class SpeedTests
 {
     [Fact]
-    public void FromKilometersPerHour_to_mps()
-        => Assert.Equal(10, Speed.FromKilometersPerHour(36).MetersPerSecond, precision: 6);
+    public void FromKilometersPerHour_to_mps() =>
+        Assert.Equal(10, Speed.FromKilometersPerHour(36).MetersPerSecond, precision: 6);
 
     [Fact]
-    public void FromMilesPerHour_to_mps()
-        => Assert.Equal(26.8224, Speed.FromMilesPerHour(60).MetersPerSecond, precision: 3);
+    public void FromMilesPerHour_to_mps() =>
+        Assert.Equal(26.8224, Speed.FromMilesPerHour(60).MetersPerSecond, precision: 3);
 
     [Fact]
-    public void FromKnots_to_mps()
-        => Assert.Equal(0.514444, Speed.FromKnots(1).MetersPerSecond, precision: 5);
+    public void FromKnots_to_mps() =>
+        Assert.Equal(0.514444, Speed.FromKnots(1).MetersPerSecond, precision: 5);
 
     [Fact]
-    public void ToKilometersPerHour_round_trips()
-        => Assert.Equal(36, Speed.FromMetersPerSecond(10).ToKilometersPerHour(), precision: 6);
+    public void ToKilometersPerHour_round_trips() =>
+        Assert.Equal(36, Speed.FromMetersPerSecond(10).ToKilometersPerHour(), precision: 6);
 
     [Theory]
     [InlineData(100, "100 km/h")]
     [InlineData(1, "1 km/h")]
     [InlineData(0.5, "0.5 km/h")]
-    public void Humanize_kph(double kph, string expected)
-        => Assert.Equal(expected, Speed.FromKilometersPerHour(kph).Humanize());
+    public void Humanize_kph(double kph, string expected) =>
+        Assert.Equal(expected, Speed.FromKilometersPerHour(kph).Humanize());
 
     [Fact]
-    public void Humanize_mph_renders_as_kmh()
-        => Assert.Equal("96.6 km/h", Speed.FromMilesPerHour(60).Humanize());
+    public void Humanize_mph_renders_as_kmh() =>
+        Assert.Equal("96.6 km/h", Speed.FromMilesPerHour(60).Humanize());
 
     [Fact]
-    public void Zero_humanizes_in_kmh()
-        => Assert.Equal("0 km/h", Speed.FromMetersPerSecond(0).Humanize());
+    public void Zero_humanizes_in_kmh() =>
+        Assert.Equal("0 km/h", Speed.FromMetersPerSecond(0).Humanize());
 
     [Theory]
     [InlineData("100 km/h", 100)]
@@ -56,12 +56,10 @@ public class SpeedTests
     }
 
     [Fact]
-    public void H_KilometersPerHour()
-        => Assert.Equal("100 km/h", H.KilometersPerHour(100));
+    public void H_KilometersPerHour() => Assert.Equal("100 km/h", H.KilometersPerHour(100));
 
     [Fact]
-    public void H_MilesPerHour()
-        => Assert.Equal("96.6 km/h", H.MilesPerHour(60));
+    public void H_MilesPerHour() => Assert.Equal("96.6 km/h", H.MilesPerHour(60));
 
     [Fact]
     public void Conversion_round_trip_kph_mps()
@@ -72,8 +70,12 @@ public class SpeedTests
     }
 
     [Fact]
-    public void Conversion_kph_to_mph()
-        => Assert.Equal(62.137, H.Convert(100, Units.Speed.KilometerPerHour, Units.Speed.MilePerHour), precision: 3);
+    public void Conversion_kph_to_mph() =>
+        Assert.Equal(
+            62.137,
+            H.Convert(100, Units.Speed.KilometerPerHour, Units.Speed.MilePerHour),
+            precision: 3
+        );
 
     [Fact]
     public void Comparison_orders_by_mps()
@@ -82,6 +84,6 @@ public class SpeedTests
     }
 
     [Fact]
-    public void Equality_across_units()
-        => Assert.Equal(Speed.FromMetersPerSecond(10), Speed.FromKilometersPerHour(36));
+    public void Equality_across_units() =>
+        Assert.Equal(Speed.FromMetersPerSecond(10), Speed.FromKilometersPerHour(36));
 }

@@ -19,9 +19,6 @@ public static partial class Units
         /// <summary>Gigahertz — 1,000,000,000 hertz.</summary>
         public static readonly Unit Gigahertz = new("GHz", 1_000_000_000, Dimension.Frequency);
 
-        internal static readonly Unit[] All =
-        [
-            Hertz, Kilohertz, Megahertz, Gigahertz,
-        ];
+        internal static readonly Unit[] All = [Hertz, Kilohertz, Megahertz, Gigahertz];
     }
 }

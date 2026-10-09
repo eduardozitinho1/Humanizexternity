@@ -24,11 +24,15 @@ public static class TemperatureFormatter
     public static string Format(
         double kelvin,
         TemperatureScale scale = TemperatureScale.Celsius,
-        HumanizeOptions? options = null)
+        HumanizeOptions? options = null
+    )
     {
-        if (double.IsNaN(kelvin)) return "NaN";
-        if (double.IsPositiveInfinity(kelvin)) return "∞";
-        if (double.IsNegativeInfinity(kelvin)) return "-∞";
+        if (double.IsNaN(kelvin))
+            return "NaN";
+        if (double.IsPositiveInfinity(kelvin))
+            return "∞";
+        if (double.IsNegativeInfinity(kelvin))
+            return "-∞";
 
         var opts = options ?? HumanizeOptions.Default;
 
@@ -37,7 +41,11 @@ public static class TemperatureFormatter
             TemperatureScale.Celsius => (kelvin - 273.15, "°C"),
             TemperatureScale.Fahrenheit => ((kelvin - 273.15) * 9.0 / 5.0 + 32, "°F"),
             TemperatureScale.Kelvin => (kelvin, "K"),
-            _ => throw new ArgumentOutOfRangeException(nameof(scale), scale, "Unknown temperature scale."),
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(scale),
+                scale,
+                "Unknown temperature scale."
+            ),
         };
 
         return HumanizeFormatter.Combine(value, symbol, opts);

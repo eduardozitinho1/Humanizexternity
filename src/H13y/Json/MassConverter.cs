@@ -10,9 +10,12 @@ namespace H13y.Json;
 /// </summary>
 public sealed class MassConverter : JsonConverter<Mass>
 {
-    public override Mass Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        => new(reader.GetDouble());
+    public override Mass Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    ) => new(reader.GetDouble());
 
-    public override void Write(Utf8JsonWriter writer, Mass value, JsonSerializerOptions options)
-        => writer.WriteNumberValue(value.Grams);
+    public override void Write(Utf8JsonWriter writer, Mass value, JsonSerializerOptions options) =>
+        writer.WriteNumberValue(value.Grams);
 }

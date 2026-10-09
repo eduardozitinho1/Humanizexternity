@@ -1,5 +1,5 @@
-using Xunit;
 using System.Globalization;
+using Xunit;
 
 namespace H13y.Tests;
 
@@ -85,8 +85,7 @@ public class ConversionTests
     [Fact]
     public void Incompatible_dimensions_throw()
     {
-        Assert.Throws<ArgumentException>(() =>
-            H.Convert(1, Units.Data.Byte, Units.Mass.Gram));
+        Assert.Throws<ArgumentException>(() => H.Convert(1, Units.Data.Byte, Units.Mass.Gram));
     }
 
     [Fact]
@@ -114,6 +113,7 @@ public class ConversionTests
     public void Parse_and_convert_incompatible_throws()
     {
         Assert.Throws<ArgumentException>(() =>
-            H.Convert("1 kg", Units.Data.Byte, CultureInfo.InvariantCulture));
+            H.Convert("1 kg", Units.Data.Byte, CultureInfo.InvariantCulture)
+        );
     }
 }

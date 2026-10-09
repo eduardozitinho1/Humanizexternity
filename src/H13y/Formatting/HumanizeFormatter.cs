@@ -8,11 +8,18 @@ public static class HumanizeFormatter
     /// <summary>
     /// Formats a value (already in the dimension's base unit) into a human-readable string.
     /// </summary>
-    public static string Format(double baseValue, Dimension dimension, HumanizeOptions? options = null)
+    public static string Format(
+        double baseValue,
+        Dimension dimension,
+        HumanizeOptions? options = null
+    )
     {
-        if (double.IsNaN(baseValue)) return "NaN";
-        if (double.IsPositiveInfinity(baseValue)) return "∞";
-        if (double.IsNegativeInfinity(baseValue)) return "-∞";
+        if (double.IsNaN(baseValue))
+            return "NaN";
+        if (double.IsPositiveInfinity(baseValue))
+            return "∞";
+        if (double.IsNegativeInfinity(baseValue))
+            return "-∞";
 
         ThrowHelper.ThrowIfNegative(baseValue, nameof(baseValue));
 
@@ -26,9 +33,15 @@ public static class HumanizeFormatter
     /// <summary>Formats a duration in seconds using compound notation.</summary>
     public static string FormatDuration(double seconds, HumanizeOptions? options = null)
     {
-        if (double.IsNaN(seconds)) return "NaN";
-        if (double.IsPositiveInfinity(seconds)) return "∞";
-        if (double.IsNegativeInfinity(seconds)) return "-∞";
+        if (double.IsNaN(seconds))
+            return "NaN";
+        if (double.IsPositiveInfinity(seconds))
+            return "∞";
+        if (double.IsNegativeInfinity(seconds))
+            return "-∞";
+
+        if (seconds < 0)
+            return "-" + FormatDuration(-seconds, options);
 
         var opts = options ?? HumanizeOptions.Default;
         var joinSeparator = opts.SpaceBetweenValueAndUnit ? " " : "";
@@ -55,8 +68,10 @@ public static class HumanizeFormatter
             double secondsLeft = seconds % 60;
 
             var parts = new List<string> { Combine(hours, "h", opts) };
-            if (minutes > 0) parts.Add(Combine(minutes, "min", opts));
-            if (secondsLeft > 0) parts.Add(Combine(secondsLeft, "s", opts));
+            if (minutes > 0)
+                parts.Add(Combine(minutes, "min", opts));
+            if (secondsLeft > 0)
+                parts.Add(Combine(secondsLeft, "s", opts));
             return string.Join(joinSeparator, parts);
         }
 
@@ -79,8 +94,6 @@ public static class HumanizeFormatter
     internal static string Combine(double value, string symbol, HumanizeOptions options)
     {
         var number = NumberFormatter.Format(value, options.MaxDecimals, options.Culture);
-        return options.SpaceBetweenValueAndUnit
-            ? $"{number} {symbol}"
-            : $"{number}{symbol}";
+        return options.SpaceBetweenValueAndUnit ? $"{number} {symbol}" : $"{number}{symbol}";
     }
 }

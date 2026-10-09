@@ -24,9 +24,6 @@ public static partial class Units
         /// <summary>Tonne (metric ton) — 1,000,000 grams.</summary>
         public static readonly Unit Tonne = new("t", 1_000_000, Dimension.Mass);
 
-        internal static readonly Unit[] All =
-        [
-            Milligram, Gram, Kilogram, Tonne,
-        ];
+        internal static readonly Unit[] All = [Milligram, Gram, Kilogram, Tonne];
     }
 }
