@@ -91,9 +91,10 @@ public static class HumanizeFormatter
             : Combine(weeks, "w", opts);
     }
 
-    internal static string Combine(double value, string symbol, HumanizeOptions options)
-    {
-        var number = NumberFormatter.Format(value, options.MaxDecimals, options.Culture);
-        return options.SpaceBetweenValueAndUnit ? $"{number} {symbol}" : $"{number}{symbol}";
-    }
+internal static string Combine(double value, string symbol, HumanizeOptions options)
+{
+    var number = NumberFormatter.Format(value, options.MaxDecimals, options.Culture);
+    var label = UnitNames.Resolve(symbol, value, options.UnitStyle, options.Pluralize);
+    return options.SpaceBetweenValueAndUnit ? $"{number} {label}" : $"{number}{label}";
+}
 }

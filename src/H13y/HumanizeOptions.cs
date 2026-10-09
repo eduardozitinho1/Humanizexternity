@@ -27,4 +27,16 @@ public sealed record HumanizeOptions
     /// traditional KB, MB, GB, TB, PB. The numeric factor stays 1024 in both cases.
     /// </summary>
     public bool UseIecSymbols { get; init; }
+/// <summary>
+/// Whether unit labels are rendered as compact symbols ("kg", "GB") or as
+/// full English names ("kilogram", "gigabyte"). Default is <see cref="UnitStyle.Symbol"/>.
+/// </summary>
+public UnitStyle UnitStyle { get; init; } = UnitStyle.Symbol;
+
+/// <summary>
+/// Whether unit names are pluralized based on the value when
+/// <see cref="UnitStyle"/> is <see cref="UnitStyle.FullName"/>.
+/// Default is <c>true</c>. Has no effect when the style is <see cref="UnitStyle.Symbol"/>.
+/// </summary>
+public bool Pluralize { get; init; } = true;
 }
