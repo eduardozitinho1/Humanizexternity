@@ -143,6 +143,11 @@ public static class H
             span = default;
             return false;
         }
+        catch (OverflowException)
+        {
+            span = default;
+            return false;
+        }
     }
 
     /// <summary>Picks the best unit for the given base value and dimension, then formats it.</summary>
@@ -164,6 +169,12 @@ public static class H
     {
         if (TryParseDimension(text, culture, Dimension.Data, out var value))
         {
+            if (value < long.MinValue || value >= 9_223_372_036_854_775_808d)
+            {
+                size = default;
+                return false;
+            }
+
             size = DataSize.FromBytes((long)value);
             return true;
         }
@@ -254,10 +265,18 @@ public static class H
             var measure = UnitParser.Parse(text, culture);
             if (measure.Unit.Dimension != dimension)
                 return false;
-            baseValue = measure.ToBase();
+            var parsedValue = measure.ToBase();
+            if (!double.IsFinite(parsedValue))
+                return false;
+
+            baseValue = parsedValue;
             return true;
         }
         catch (FormatException)
+        {
+            return false;
+        }
+        catch (ArgumentNullException)
         {
             return false;
         }

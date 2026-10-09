@@ -25,4 +25,13 @@ public class DurationTests
         var d = Duration.FromSeconds(seconds);
         Assert.Equal(expected, d.Humanize());
     }
+
+    [Fact]
+    public void Humanize_handles_week_counts_above_int_max()
+    {
+        var seconds = ((double)int.MaxValue + 1) * 604800;
+        var duration = Duration.FromSeconds(seconds);
+
+        Assert.Equal("2147483648 w", duration.Humanize());
+    }
 }

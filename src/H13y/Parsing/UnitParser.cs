@@ -65,7 +65,10 @@ public static class UnitParser
 
         var valueText = match.Groups["value"].Value;
 
-        if (!double.TryParse(valueText, NumberStyles.Float, culture, out var value))
+        if (
+            !double.TryParse(valueText, NumberStyles.Float, culture, out var value)
+            || !double.IsFinite(value)
+        )
             throw new FormatException($"Could not parse number '{valueText}'.");
 
         var symbol = match.Groups["unit"].Value;
@@ -138,6 +141,9 @@ public static class UnitParser
             totalSeconds += value * unit.Factor;
         }
 
+        if (!double.IsFinite(totalSeconds))
+            return false;
+
         measure = new Measure(totalSeconds, Units.Time.Second);
         return true;
     }
@@ -178,6 +184,8 @@ public static class UnitParser
         if (b >= 60)
             return false;
 
+        double totalSeconds;
+
         if (match.Groups["c"].Success)
         {
             if (
@@ -195,13 +203,17 @@ public static class UnitParser
             if (c >= 60)
                 return false;
 
-            measure = new Measure(a * 3600 + b * 60 + c, Units.Time.Second);
+            totalSeconds = a * 3600 + b * 60 + c;
         }
         else
         {
-            measure = new Measure(a * 60 + b, Units.Time.Second);
+            totalSeconds = a * 60 + b;
         }
 
+        if (!double.IsFinite(totalSeconds))
+            return false;
+
+        measure = new Measure(totalSeconds, Units.Time.Second);
         return true;
     }
 
