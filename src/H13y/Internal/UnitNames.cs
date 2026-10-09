@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Localization;
+using H13y.Localization;
+
 namespace H13y;
 
 /// <summary>
@@ -118,18 +121,33 @@ internal static class UnitNames
     /// Returns the symbol unchanged when the style is <see cref="UnitStyle.Symbol"/> or the
     /// symbol is not in the table.
     /// </summary>
-    public static string Resolve(string symbol, double value, UnitStyle style, bool pluralize)
+public static string Resolve(
+    string symbol,
+    double value,
+    UnitStyle style,
+    bool pluralize,
+    IStringLocalizer? localizer
+)
+{
+    if (style == UnitStyle.Symbol)
+        return symbol;
+
+    var isSingular = Math.Abs(Math.Abs(value) - 1.0) < 1e-9;
+    var useSingular = !pluralize || isSingular;
+
+    if (localizer is not null)
     {
-        if (style == UnitStyle.Symbol)
-            return symbol;
-
-        if (!Map.TryGetValue(symbol, out var names))
-            return symbol;
-
-        if (!pluralize)
-            return names.Singular;
-
-        var isSingular = Math.Abs(Math.Abs(value) - 1.0) < 1e-9;
-        return isSingular ? names.Singular : names.Plural;
+        var key = useSingular
+            ? LocalizationKeys.UnitSingular(symbol)
+            : LocalizationKeys.UnitPlural(symbol);
+        var localized = localizer[key];
+        if (!localized.ResourceNotFound)
+            return localized.Value;
     }
+
+    if (!Map.TryGetValue(symbol, out var names))
+        return symbol;
+
+    return useSingular ? names.Singular : names.Plural;
+}
 }

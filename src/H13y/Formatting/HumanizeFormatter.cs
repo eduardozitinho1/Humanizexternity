@@ -93,8 +93,17 @@ public static class HumanizeFormatter
 
 internal static string Combine(double value, string symbol, HumanizeOptions options)
 {
-    var number = NumberFormatter.Format(value, options.MaxDecimals, options.Culture);
-    var label = UnitNames.Resolve(symbol, value, options.UnitStyle, options.Pluralize);
-    return options.SpaceBetweenValueAndUnit ? $"{number} {label}" : $"{number}{label}";
+     internal static string Combine(double value, string symbol, HumanizeOptions options)
+     {
+         var number = NumberFormatter.Format(value, options.MaxDecimals, options.Culture);
+        var label = UnitNames.Resolve(
+            symbol,
+            value,
+            options.UnitStyle,
+            options.Pluralize,
+            options.Localizer
+        );
+         return options.SpaceBetweenValueAndUnit ? $"{number} {label}" : $"{number}{label}";
+     }
 }
 }

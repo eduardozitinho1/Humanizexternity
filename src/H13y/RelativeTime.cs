@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Localization;
+using H13y.Localization;
+
 namespace H13y;
 
 public static partial class H
@@ -9,12 +12,9 @@ public static partial class H
     /// <param name="target">The moment to describe.</param>
     /// <param name="now">Optional reference time. Defaults to <see cref="DateTime.UtcNow"/>.</param>
     /// <param name="options">
-    /// Optional formatting options. <see cref="HumanizeOptions.Culture"/>,
-    /// <see cref="HumanizeOptions.UnitStyle"/>, <see cref="HumanizeOptions.Pluralize"/>, and
-    /// <see cref="HumanizeOptions.SpaceBetweenValueAndUnit"/> are honored.
-    /// When null, full unit names are used ("5 minutes ago").
+    /// Optional formatting options. Culture, UnitStyle, Pluralize, SpaceBetweenValueAndUnit,
+    /// and Localizer are honored. When null, full unit names are used ("5 minutes ago").
     /// </param>
-    /// <returns>A phrase such as "just now", "5 minutes ago", or "in 2 hours".</returns>
     public static string RelativeTime(
         DateTime target,
         DateTime? now = null,
@@ -43,16 +43,41 @@ public static partial class H
         var abs = delta.Duration();
 
         if (abs.TotalSeconds < 45)
-            return future ? "in a moment" : "just now";
+            return Localize(
+                options.Localizer,
+                future ? LocalizationKeys.RelativeTimeMoment : LocalizationKeys.RelativeTimeNow,
+                future ? "in a moment" : "just now"
+            );
 
         var (value, symbol) = PickBucket(abs);
         var rounded = Math.Round(value, MidpointRounding.AwayFromZero);
 
         var number = NumberFormatter.Format(rounded, options.MaxDecimals, options.Culture);
-        var label = UnitNames.Resolve(symbol, rounded, options.UnitStyle, options.Pluralize);
+        var label = UnitNames.Resolve(
+            symbol,
+            rounded,
+            options.UnitStyle,
+            options.Pluralize,
+            options.Localizer
+        );
         var core = options.SpaceBetweenValueAndUnit ? $"{number} {label}" : $"{number}{label}";
 
-        return future ? $"in {core}" : $"{core} ago";
+        var template = Localize(
+            options.Localizer,
+            future ? LocalizationKeys.RelativeTimeIn : LocalizationKeys.RelativeTimeAgo,
+            future ? "in {0}" : "{0} ago"
+        );
+
+        return string.Format(options.Culture, template, core);
+    }
+
+    private static string Localize(IStringLocalizer? localizer, string key, string fallback)
+    {
+        if (localizer is null)
+            return fallback;
+
+        var localized = localizer[key];
+        return localized.ResourceNotFound ? fallback : localized.Value;
     }
 
     private static (double Value, string Symbol) PickBucket(TimeSpan span)

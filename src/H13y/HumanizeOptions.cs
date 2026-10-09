@@ -1,5 +1,6 @@
 using System.Globalization;
-
+using Microsoft.Extensions.Localization;
+ 
 namespace H13y;
 
 /// <summary>
@@ -39,4 +40,15 @@ public UnitStyle UnitStyle { get; init; } = UnitStyle.Symbol;
 /// Default is <c>true</c>. Has no effect when the style is <see cref="UnitStyle.Symbol"/>.
 /// </summary>
 public bool Pluralize { get; init; } = true;
+
+/// <summary>
+/// Optional <see cref="IStringLocalizer"/> used to translate unit names and
+/// relative-time phrases. When null, the built-in English strings are used.
+/// </summary>
+/// <remarks>
+/// See <see cref="Localization.LocalizationKeys"/> for the key conventions.
+/// Missing keys fall back to the built-in English string, so partial
+/// localization is fully valid.
+/// </remarks>
+public IStringLocalizer? Localizer { get; init; }
 }
