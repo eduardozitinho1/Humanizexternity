@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.1] - 2026-10-09
+
+### Fixed
+- Restore the `<None Include="../../README.md" />` item removed from
+  `H13y.csproj` in 1.3.0. Without it, `dotnet pack` failed with NU5039
+  because the packaged README declared by `<PackageReadmeFile>` could not
+  be found.
+
 ## [1.3.0] - 2026-10-09
 
 ### Added
