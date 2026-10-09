@@ -65,12 +65,12 @@ public class LocalizationTests
         Assert.Equal("1 hora 1 minuto 1 segundo", Duration.FromSeconds(3661).Humanize(opts));
     }
 
-     [Fact]
-     public void Missing_key_falls_back_to_english()
-     {
+    [Fact]
+    public void Missing_key_falls_back_to_english()
+    {
         var opts = PtBrOptions();
         Assert.Equal("1,5 tonnes", Mass.FromTonnes(1.5).Humanize(opts));
-     }
+    }
 
     [Fact]
     public void Symbol_style_ignores_localizer()

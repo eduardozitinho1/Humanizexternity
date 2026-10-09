@@ -1,5 +1,5 @@
-using Microsoft.Extensions.Localization;
 using H13y.Localization;
+using Microsoft.Extensions.Localization;
 
 namespace H13y;
 

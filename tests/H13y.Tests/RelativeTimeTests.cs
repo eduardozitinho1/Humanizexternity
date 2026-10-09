@@ -44,13 +44,15 @@ public class RelativeTimeTests
     public void Weeks_ago() => Assert.Equal("2 weeks ago", H.RelativeTime(Now.AddDays(-14), Now));
 
     [Fact]
-    public void Months_ago() => Assert.Equal("6 months ago", H.RelativeTime(Now.AddDays(-180), Now));
+    public void Months_ago() =>
+        Assert.Equal("6 months ago", H.RelativeTime(Now.AddDays(-180), Now));
 
     [Fact]
     public void Years_ago() => Assert.Equal("2 years ago", H.RelativeTime(Now.AddDays(-730), Now));
 
     [Fact]
-    public void Singular_year() => Assert.Equal("1 year ago", H.RelativeTime(Now.AddDays(-400), Now));
+    public void Singular_year() =>
+        Assert.Equal("1 year ago", H.RelativeTime(Now.AddDays(-400), Now));
 
     [Fact]
     public void DateTimeOffset_overload()
