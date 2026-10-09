@@ -91,8 +91,6 @@ public static class HumanizeFormatter
             : Combine(weeks, "w", opts);
     }
 
-internal static string Combine(double value, string symbol, HumanizeOptions options)
-{
      internal static string Combine(double value, string symbol, HumanizeOptions options)
      {
          var number = NumberFormatter.Format(value, options.MaxDecimals, options.Culture);
@@ -105,5 +103,4 @@ internal static string Combine(double value, string symbol, HumanizeOptions opti
         );
          return options.SpaceBetweenValueAndUnit ? $"{number} {label}" : $"{number}{label}";
      }
-}
 }
