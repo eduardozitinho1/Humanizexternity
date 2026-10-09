@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.4.0] - 2026-10-09
+
+### Fixed
+- Full-name output now round-trips through the parser. Multi-word labels
+  (`"cubic meter"`, `"kilometer per hour"`, `"kilowatt-hour"`) are accepted,
+  and `UnitAliases.Resolve` normalizes spaces, hyphens, and underscores before
+  lookup, so every name emitted under `UnitStyle.FullName` parses back.
+- Added missing aliases: `hectare`, `degree(s) Celsius`, `degree(s) Fahrenheit`,
+  `mile per hour`, `foot per second`, `knot`, and singular `pound per square inch`.
+
+### Tests
+- Add `FullNameRoundTripTests`, which iterates every registered unit and verifies
+  that the humanized string parses back to the same base value.
+
 ## [1.3.1] - 2026-10-09
 
 ### Fixed
