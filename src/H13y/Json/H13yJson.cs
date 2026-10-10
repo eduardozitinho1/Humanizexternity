@@ -33,6 +33,7 @@ public static class H13yJson
         options.Converters.Add(new AreaConverter());
         options.Converters.Add(new TemperatureConverter());
         options.Converters.Add(new DataRateConverter());
+        options.Converters.Add(new TemperatureDeltaConverter());
         return options;
     }
 }

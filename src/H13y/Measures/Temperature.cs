@@ -39,6 +39,12 @@ public readonly record struct Temperature(double Kelvin) : IComparable<Temperatu
 
     public int CompareTo(Temperature other) => Kelvin.CompareTo(other.Kelvin);
 
+    public TemperatureDelta Difference(Temperature other) => new(Kelvin - other.Kelvin);
+
+    public Temperature Add(TemperatureDelta delta) => new(Kelvin + delta.KelvinDelta);
+
+    public Temperature Subtract(TemperatureDelta delta) => new(Kelvin - delta.KelvinDelta);
+
     public string Humanize(
         TemperatureScale scale = TemperatureScale.Celsius,
         HumanizeOptions? options = null
