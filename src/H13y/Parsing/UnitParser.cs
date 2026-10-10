@@ -44,39 +44,73 @@ public static class UnitParser
     /// <exception cref="FormatException">Thrown when the input is empty, malformed, or uses an unknown unit.</exception>
     public static Measure Parse(string text, CultureInfo culture)
     {
-        ArgumentNullException.ThrowIfNull(text);
-        ArgumentNullException.ThrowIfNull(culture);
+        var result = ParseDetailed(text, culture);
+        if (!result.Success)
+            throw new FormatException(result.ErrorMessage ?? "Parse failed.");
+        return result.Measure;
+    }
+
+    /// <summary>
+    /// Parses a string and reports a categorized failure instead of throwing.
+    /// </summary>
+    public static ParseResult ParseDetailed(string text, CultureInfo culture)
+    {
+        if (text is null)
+            return ParseResult.Fail(ParseErrorKind.EmptyInput, "Input is null.");
+        if (culture is null)
+            return ParseResult.Fail(ParseErrorKind.EmptyInput, "Culture is null.");
 
         var trimmed = text.Trim();
 
         if (trimmed.Length == 0)
-            throw new FormatException("Input is empty.");
+            return ParseResult.Fail(ParseErrorKind.EmptyInput, "Input is empty.");
 
         if (TryParseCompoundDuration(trimmed, culture, out var compound))
-            return compound;
+            return ParseResult.Ok(compound);
 
         if (TryParseColonDuration(trimmed, out var colon))
-            return colon;
+            return ParseResult.Ok(colon);
 
         var match = SinglePattern.Match(trimmed);
 
         if (!match.Success)
-            throw new FormatException($"Could not parse '{text}'.");
+            return ParseResult.Fail(
+                ParseErrorKind.InvalidNumber,
+                $"Could not parse '{text}'."
+            );
 
         var valueText = match.Groups["value"].Value;
 
-        if (
-            !double.TryParse(valueText, NumberStyles.Float, culture, out var value)
-            || !double.IsFinite(value)
-        )
-            throw new FormatException($"Could not parse number '{valueText}'.");
+        if (!double.TryParse(valueText, NumberStyles.Float, culture, out var value))
+        {
+            var kind = valueText.Contains('e', StringComparison.OrdinalIgnoreCase)
+                ? ParseErrorKind.Overflow
+                : ParseErrorKind.InvalidNumber;
+            return ParseResult.Fail(kind, $"Could not parse number '{valueText}'.");
+        }
+
+        if (double.IsInfinity(value))
+            return ParseResult.Fail(
+                ParseErrorKind.Overflow,
+                $"Value '{valueText}' overflows the representable range."
+            );
+
+        if (double.IsNaN(value))
+            return ParseResult.Fail(
+                ParseErrorKind.NonFiniteValue,
+                $"Value '{valueText}' is not a number."
+            );
 
         var symbol = match.Groups["unit"].Value;
+        var unit = UnitAliases.Resolve(symbol);
 
-        var unit =
-            UnitAliases.Resolve(symbol) ?? throw new FormatException($"Unknown unit '{symbol}'.");
+        if (unit is null)
+            return ParseResult.Fail(
+                ParseErrorKind.UnknownUnit,
+                $"Unknown unit '{symbol}'."
+            );
 
-        return new Measure(value, unit);
+        return ParseResult.Ok(new Measure(value, unit));
     }
 
     /// <summary>
