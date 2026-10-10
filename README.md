@@ -31,6 +31,14 @@ H.Bars(1.5);                      // "1.5 bar"
 H.Gigahertz(2.4);                 // "2.4 GHz"
 H.Degrees(45);                    // "45 deg"
 H.Bits(1_000_000_000);            // "1 Gb"
+H.MegabitsPerSecond(100);         // "100 Mbps"
+H.Compact(1_500_000);             // "1.5M"
+H.CompactWords(1_500_000);        // "1.5 million"
+H.Approximate(1234, ApproximationPrecision.Hundred);  // "about 1200"
+H.Ordinal(22);                    // "22nd"
+H.OrdinalWord(22);                // "twenty-second"
+H.Roman(2024);                    // "MMXXIV"
+H.Bits(1_000_000_000);            // "1 Gb"
 H.Compact(1_500_000);             // "1.5M"
 H.CompactWords(1_500_000);        // "1.5 million"
 H.Ordinal(22);                    // "22nd"
@@ -56,6 +64,7 @@ H.Roman(2024);                    // "MMXXIV"
 | Frequency    | hertz     | Hz, kHz, MHz, GHz           |
 | Angle        | radian    | rad, deg, grad, turn        |
 | Bits         | bit       | b, Kb, Mb, Gb, Tb           |
+| DataRate     | bit/s     | bps, Kbps, Mbps, Gbps, Tbps |
 
 Notes:
 

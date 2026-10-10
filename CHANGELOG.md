@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.6.0] - 2026-10-10
+
+### Added
+- `Dimension.DataRate` with a 1000-based bit chain (`bps`, `Kbps`, `Mbps`, `Gbps`, `Tbps`)
+  and byte-per-second units (`B/s`, `KB/s`, `MB/s`, `GB/s`, `TB/s`) as the 8x
+  counterparts. Typed `Measures.DataRate` record with `From`/`To` helpers,
+  arithmetic, comparison, `IFormattable`, `Humanize`, and a JSON converter.
+- `H.MegabitsPerSecond`, `H.GigabitsPerSecond`, `H.MegabytesPerSecond`, and
+  `H.GigabytesPerSecond` facade methods.
+- `H.DownloadDuration(DataSize, DataRate)` and `H.DownloadTime(DataSize, DataRate)`
+  overloads accepting the new rate type directly.
+- IEC binary bit units `Kibibit`, `Mebibit`, `Gibibit`, and `Tebibit` (1024-based)
+  registered for parsing and conversion but excluded from auto-selection, so
+  `"1 Kib"` parses as 1024 bits while `"1 Kb"` remains 1000 bits.
+- `H.Approximate` for rough estimates: `about 1200`, `roughly 0.8`, `approximately
+  2 million`. New `ApproximationPrecision` and `ApproximationStyle` enums, with
+  localizable prefixes via `LocalizationKeys.Approximate*`.
+- `H.TryParseCompact` to parse compact strings back to numbers: `"1.5M"` becomes
+  `1_500_000`, `"1.5 million"` becomes `1_500_000`. Round-trips both styles.
+- `H.TryParseOrdinal` to parse ordinals back to integers: `"22nd"` becomes 22,
+  `"103rd"` becomes 103. Rejects mismatched suffixes like `"1th"`.
+- `H.OrdinalWord` extended to cover values in `0..9999`: `"one thousandth"`,
+  `"one thousand two hundred thirty-fourth"`.
+
+### Changed
+- `H.OrdinalWord` now accepts values up to 9999 instead of 999.
+
 ## [1.5.0] - 2026-10-09
 
 ### Added
