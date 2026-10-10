@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.5.0] - 2026-10-09
+
+### Added
+- `Dimension.Bits` with 1000-based unit chain (`b`, `Kb`, `Mb`, `Gb`, `Tb`) and typed
+  `Measures.Bits` record for network bandwidth, distinct from `DataSize` (bytes).
+- `H.Compact` and `H.CompactWords` for humanizing raw numbers outside any measure
+  dimension (`1.2K`, `1.5M`, `1.5 million`). New `CompactStyle` enum.
+- `H.Ordinal` (`1st`, `22nd`) and `H.OrdinalWord` (`first`, `twenty-first`).
+- `H.Roman`, `H.ParseRoman`, `H.TryParseRoman` with `RomanStyle.Subtractive`
+  (`MMXXIV`) and `RomanStyle.Additive` (`IIII`).
+- `H.DownloadDuration` and `H.DownloadTime` computing transfer time from a
+  `DataSize` and a `Bits` rate.
+
 ## [1.4.0] - 2026-10-09
 
 ### Fixed
