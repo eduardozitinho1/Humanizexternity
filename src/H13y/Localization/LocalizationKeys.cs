@@ -36,4 +36,13 @@ public static class LocalizationKeys
 
     /// <summary>Template for "in {0}" — receives the duration phrase as argument 0.</summary>
     public const string RelativeTimeIn = "RelativeTime_In";
+
+    /// <summary>Prefix for "about".</summary>
+    public const string ApproximateAbout = "Approximate_About";
+
+    /// <summary>Prefix for "roughly".</summary>
+    public const string ApproximateRoughly = "Approximate_Roughly";
+
+    /// <summary>Prefix for "approximately".</summary>
+    public const string ApproximateApproximately = "Approximate_Approximately";
 }
