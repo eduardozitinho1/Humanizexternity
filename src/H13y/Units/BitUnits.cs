@@ -29,6 +29,18 @@ public static partial class Units
         /// <summary>Terabit — 1,000,000,000,000 bits.</summary>
         public static readonly Unit Terabit = new("Tb", 1_000_000_000_000, Dimension.Bits);
 
+        /// <summary>Kibibit — 1024 bits. IEC binary unit.</summary>
+        public static readonly Unit Kibibit = new("Kib", 1_024, Dimension.Bits);
+
+        /// <summary>Mebibit — 1,048,576 bits. IEC binary unit.</summary>
+        public static readonly Unit Mebibit = new("Mib", 1_048_576, Dimension.Bits);
+
+        /// <summary>Gibibit — 1,073,741,824 bits. IEC binary unit.</summary>
+        public static readonly Unit Gibibit = new("Gib", 1_073_741_824, Dimension.Bits);
+
+        /// <summary>Tebibit — 1,099,511,627,776 bits. IEC binary unit.</summary>
+        public static readonly Unit Tebibit = new("Tib", 1_099_511_627_776, Dimension.Bits);
+
         internal static readonly Unit[] All = [Bit, Kilobit, Megabit, Gigabit, Terabit];
     }
 }

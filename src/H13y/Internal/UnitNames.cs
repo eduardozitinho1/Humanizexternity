@@ -38,6 +38,11 @@ internal static class UnitNames
         ["Gb"] = ("gigabit", "gigabits"),
         ["Tb"] = ("terabit", "terabits"),
 
+        ["Kib"] = ("kibibit", "kibibits"),
+        ["Mib"] = ("mebibit", "mebibits"),
+        ["Gib"] = ("gibibit", "gibibits"),
+        ["Tib"] = ("tebibit", "tebibits"),
+
         // Mass
         ["mg"] = ("milligram", "milligrams"),
         ["g"] = ("gram", "grams"),
@@ -122,6 +127,18 @@ internal static class UnitNames
         ["deg"] = ("degree", "degrees"),
         ["grad"] = ("gradian", "gradians"),
         ["turn"] = ("turn", "turns"),
+
+        // DataRate
+        ["bps"] = ("bit per second", "bits per second"),
+        ["Kbps"] = ("kilobit per second", "kilobits per second"),
+        ["Mbps"] = ("megabit per second", "megabits per second"),
+        ["Gbps"] = ("gigabit per second", "gigabits per second"),
+        ["Tbps"] = ("terabit per second", "terabits per second"),
+        ["B/s"] = ("byte per second", "bytes per second"),
+        ["KB/s"] = ("kilobyte per second", "kilobytes per second"),
+        ["MB/s"] = ("megabyte per second", "megabytes per second"),
+        ["GB/s"] = ("gigabyte per second", "gigabytes per second"),
+        ["TB/s"] = ("terabyte per second", "terabytes per second"),
     };
 
     /// <summary>

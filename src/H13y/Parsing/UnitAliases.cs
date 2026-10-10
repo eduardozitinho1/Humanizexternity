@@ -88,6 +88,11 @@ internal static class UnitAliases
         Add(Units.Bits.Gigabit, "gigabit", "gigabits", "gbit", "gbits");
         Add(Units.Bits.Terabit, "terabit", "terabits", "tbit", "tbits");
 
+        Add(Units.Bits.Kibibit, "kibibit", "kibibits");
+        Add(Units.Bits.Mebibit, "mebibit", "mebibits");
+        Add(Units.Bits.Gibibit, "gibibit", "gibibits");
+        Add(Units.Bits.Tebibit, "tebibit", "tebibits");
+
         // Mass
         Add(Units.Mass.Milligram, "milligram", "milligrams");
         Add(Units.Mass.Gram, "gram", "grams");
@@ -209,6 +214,18 @@ internal static class UnitAliases
         Add(Units.Angle.Degree, "degree", "degrees", "°");
         Add(Units.Angle.Gradian, "gradians");
         Add(Units.Angle.Turn, "turns", "revolution", "revolutions");
+
+        // DataRate
+        Add(Units.DataRate.BitPerSecond, "bitpersecond", "bitspersecond");
+        Add(Units.DataRate.KilobitPerSecond, "kbps", "kilobitpersecond", "kilobitspersecond");
+        Add(Units.DataRate.MegabitPerSecond, "mbps", "megabitpersecond", "megabitspersecond");
+        Add(Units.DataRate.GigabitPerSecond, "gbps", "gigabitpersecond", "gigabitspersecond");
+        Add(Units.DataRate.TerabitPerSecond, "tbps", "terabitpersecond", "terabitspersecond");
+        Add(Units.DataRate.BytePerSecond, "bytepersecond", "bytespersecond");
+        Add(Units.DataRate.KilobytePerSecond, "kilobytepersecond", "kilobytespersecond");
+        Add(Units.DataRate.MegabytePerSecond, "megabytepersecond", "megabytespersecond");
+        Add(Units.DataRate.GigabytePerSecond, "gigabytepersecond", "gigabytespersecond");
+        Add(Units.DataRate.TerabytePerSecond, "terabytepersecond", "terabytespersecond");
 
         return (symbols, aliasesMap);
     }
