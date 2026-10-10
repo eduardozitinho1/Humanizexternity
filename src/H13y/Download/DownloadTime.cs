@@ -35,6 +35,13 @@ public static partial class H
         DownloadDuration(size.Bytes, rate.Value);
 
     /// <summary>
+    /// Computes how long a download will take given the size and a
+    /// <see cref="DataRate"/>.
+    /// </summary>
+    public static Duration DownloadDuration(DataSize size, DataRate rate) =>
+        DownloadDuration(size.Bytes, rate.BitsPerSecond);
+
+    /// <summary>
     /// Computes and humanizes how long a download will take: "3.6 s".
     /// </summary>
     public static string DownloadTime(
@@ -48,4 +55,13 @@ public static partial class H
     /// </summary>
     public static string DownloadTime(DataSize size, Bits rate, HumanizeOptions? options = null) =>
         DownloadDuration(size, rate).Humanize(options);
+
+    /// <summary>
+    /// Computes and humanizes how long a download will take for a <see cref="DataRate"/>.
+    /// </summary>
+    public static string DownloadTime(
+        DataSize size,
+        DataRate rate,
+        HumanizeOptions? options = null
+    ) => DownloadDuration(size, rate).Humanize(options);
 }

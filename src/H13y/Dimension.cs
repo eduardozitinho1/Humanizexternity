@@ -46,4 +46,7 @@ public enum Dimension
 
     /// <summary>Digital information measured in bits. Base unit: bit. Uses 1000-based scaling (SI).</summary>
     Bits,
+
+    /// <summary>Data transfer rate. Base unit: bit per second.</summary>
+    DataRate,
 }

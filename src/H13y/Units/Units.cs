@@ -13,6 +13,7 @@ public static partial class Units
     [
         .. Data.All,
         .. Bits.All,
+        .. DataRate.All,
         .. Mass.All,
         .. Length.All,
         .. Time.All,

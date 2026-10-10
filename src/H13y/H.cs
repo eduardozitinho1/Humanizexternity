@@ -14,6 +14,24 @@ public static partial class H
     public static string Bits(double bits, HumanizeOptions? options = null) =>
         Measures.Bits.FromBits(bits).Humanize(options);
 
+    public static string BitsPerSecond(double bps, HumanizeOptions? options = null) =>
+        DataRate.FromBitsPerSecond(bps).Humanize(options);
+
+    public static string KilobitsPerSecond(double kbps, HumanizeOptions? options = null) =>
+        DataRate.FromKilobitsPerSecond(kbps).Humanize(options);
+
+    public static string MegabitsPerSecond(double mbps, HumanizeOptions? options = null) =>
+        DataRate.FromMegabitsPerSecond(mbps).Humanize(options);
+
+    public static string GigabitsPerSecond(double gbps, HumanizeOptions? options = null) =>
+        DataRate.FromGigabitsPerSecond(gbps).Humanize(options);
+
+    public static string MegabytesPerSecond(double mBps, HumanizeOptions? options = null) =>
+        DataRate.FromMegabytesPerSecond(mBps).Humanize(options);
+
+    public static string GigabytesPerSecond(double gBps, HumanizeOptions? options = null) =>
+        DataRate.FromGigabytesPerSecond(gBps).Humanize(options);
+
     public static string Grams(double grams, HumanizeOptions? options = null) =>
         Mass.FromGrams(grams).Humanize(options);
 
