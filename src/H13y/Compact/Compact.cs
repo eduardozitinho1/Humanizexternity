@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace H13y;
 
 /// <summary>
@@ -26,13 +28,23 @@ public static partial class H
     /// </summary>
     public static string CompactWords(double value, HumanizeOptions? options = null) =>
         CompactFormatter.Format(value, CompactStyle.Word, options);
+
+    /// <summary>
+    /// Parses a compact-formatted string back to its numeric value: "1.5M" becomes
+    /// 1_500_000, "1.5 million" becomes 1_500_000. Returns false on malformed input.
+    /// </summary>
+    public static bool TryParseCompact(
+        string text,
+        out double value,
+        HumanizeOptions? options = null
+    ) => CompactFormatter.TryParse(text, out value, options);
 }
 
 internal static class CompactFormatter
 {
-    private static readonly string[] ShortSuffixes = ["", "K", "M", "B", "T"];
+    private static readonly string[] ShortDisplay = ["", "K", "M", "B", "T"];
 
-    private static readonly string[] LongSuffixes =
+    private static readonly string[] LongDisplay =
     [
         "",
         "thousand",
@@ -41,7 +53,27 @@ internal static class CompactFormatter
         "trillion",
     ];
 
-    public static string Format(double value, CompactStyle style, HumanizeOptions? options = null)
+    private static readonly (string Suffix, double Multiplier)[] ShortParseTable =
+    [
+        ("K", 1e3),
+        ("M", 1e6),
+        ("B", 1e9),
+        ("T", 1e12),
+    ];
+
+    private static readonly (string Suffix, double Multiplier)[] LongParseTable =
+    [
+        ("thousand", 1e3),
+        ("million", 1e6),
+        ("billion", 1e9),
+        ("trillion", 1e12),
+    ];
+
+    public static string Format(
+        double value,
+        CompactStyle style,
+        HumanizeOptions? options = null
+    )
     {
         if (double.IsNaN(value))
             return "NaN";
@@ -57,7 +89,7 @@ internal static class CompactFormatter
         var (scaled, tier) = PickTier(abs);
         var signed = sign * scaled;
 
-        if (tier < ShortSuffixes.Length - 1)
+        if (tier < ShortDisplay.Length - 1)
         {
             var rounded = Math.Round(signed, opts.MaxDecimals, MidpointRounding.AwayFromZero);
             if (Math.Abs(rounded) >= 1000)
@@ -68,7 +100,7 @@ internal static class CompactFormatter
         }
 
         var number = NumberFormatter.Format(signed, opts.MaxDecimals, opts.Culture);
-        var suffixes = style == CompactStyle.Suffix ? ShortSuffixes : LongSuffixes;
+        var suffixes = style == CompactStyle.Suffix ? ShortDisplay : LongDisplay;
         var suffix = suffixes[tier];
 
         if (string.IsNullOrEmpty(suffix))
@@ -89,5 +121,63 @@ internal static class CompactFormatter
         if (abs < 1_000_000_000_000)
             return (abs / 1_000_000_000, 3);
         return (abs / 1_000_000_000_000, 4);
+    }
+
+    public static bool TryParse(string text, out double value, HumanizeOptions? options)
+    {
+        value = 0;
+        if (string.IsNullOrWhiteSpace(text))
+            return false;
+
+        var trimmed = text.Trim();
+        var opts = options ?? HumanizeOptions.Default;
+
+        foreach (var (suffix, multiplier) in LongParseTable)
+        {
+            var spaced = " " + suffix;
+            if (!trimmed.EndsWith(spaced, StringComparison.OrdinalIgnoreCase))
+                continue;
+            var numberPart = trimmed[..^spaced.Length].Trim();
+            if (numberPart.Length == 0)
+                continue;
+            if (!TryParseNumber(numberPart, opts.Culture, out var parsed))
+                continue;
+            var result = parsed * multiplier;
+            if (!double.IsFinite(result))
+                continue;
+            value = result;
+            return true;
+        }
+
+        foreach (var (suffix, multiplier) in ShortParseTable)
+        {
+            if (!trimmed.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
+                continue;
+            var numberPart = trimmed[..^suffix.Length].Trim();
+            if (numberPart.Length == 0)
+                continue;
+            if (!TryParseNumber(numberPart, opts.Culture, out var parsed))
+                continue;
+            var result = parsed * multiplier;
+            if (!double.IsFinite(result))
+                continue;
+            value = result;
+            return true;
+        }
+
+        if (TryParseNumber(trimmed, opts.Culture, out var plain))
+        {
+            value = plain;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool TryParseNumber(string text, CultureInfo culture, out double result)
+    {
+        if (!double.TryParse(text, NumberStyles.Float, culture, out result))
+            return false;
+        return double.IsFinite(result);
     }
 }
