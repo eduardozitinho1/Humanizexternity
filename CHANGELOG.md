@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.8.0] - 2026-10-10
+
+### Added
+- add TemperatureDelta for temperature differences
+
 ## [1.7.0] - 2026-10-10
 
 ### Added
