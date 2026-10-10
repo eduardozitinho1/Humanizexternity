@@ -35,7 +35,7 @@ internal static class UnitAliases
             return normalizedUnit;
         }
 
-        return null;
+        return H.GlobalUnits.Resolve(key);
     }
 
     private static string Normalize(string input)
