@@ -11,6 +11,9 @@ public static partial class H
     public static string Bytes(long bytes, HumanizeOptions? options = null) =>
         DataSize.FromBytes(bytes).Humanize(options);
 
+    public static string Bits(double bits, HumanizeOptions? options = null) =>
+        Measures.Bits.FromBits(bits).Humanize(options);
+
     public static string Grams(double grams, HumanizeOptions? options = null) =>
         Mass.FromGrams(grams).Humanize(options);
 

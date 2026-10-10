@@ -31,6 +31,13 @@ internal static class UnitNames
         ["TiB"] = ("tebibyte", "tebibytes"),
         ["PiB"] = ("pebibyte", "pebibytes"),
 
+        // Bits
+        ["b"] = ("bit", "bits"),
+        ["Kb"] = ("kilobit", "kilobits"),
+        ["Mb"] = ("megabit", "megabits"),
+        ["Gb"] = ("gigabit", "gigabits"),
+        ["Tb"] = ("terabit", "terabits"),
+
         // Mass
         ["mg"] = ("milligram", "milligrams"),
         ["g"] = ("gram", "grams"),

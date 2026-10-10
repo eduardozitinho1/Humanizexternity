@@ -27,8 +27,10 @@ internal static class UnitAliases
             return aliasUnit;
 
         var normalized = Normalize(key);
-        if (!string.Equals(normalized, key, StringComparison.OrdinalIgnoreCase)
-            && AliasMap.TryGetValue(normalized, out var normalizedUnit))
+        if (
+            !string.Equals(normalized, key, StringComparison.OrdinalIgnoreCase)
+            && AliasMap.TryGetValue(normalized, out var normalizedUnit)
+        )
         {
             return normalizedUnit;
         }
@@ -79,6 +81,13 @@ internal static class UnitAliases
         Add(Units.Data.Terabyte, "terabyte", "terabytes", "tebibyte", "tebibytes");
         Add(Units.Data.Petabyte, "petabyte", "petabytes", "pebibyte", "pebibytes");
 
+        // Bits
+        Add(Units.Bits.Bit, "bit", "bits");
+        Add(Units.Bits.Kilobit, "kilobit", "kilobits", "kbit", "kbits");
+        Add(Units.Bits.Megabit, "megabit", "megabits", "mbit", "mbits");
+        Add(Units.Bits.Gigabit, "gigabit", "gigabits", "gbit", "gbits");
+        Add(Units.Bits.Terabit, "terabit", "terabits", "tbit", "tbits");
+
         // Mass
         Add(Units.Mass.Milligram, "milligram", "milligrams");
         Add(Units.Mass.Gram, "gram", "grams");
@@ -106,34 +115,64 @@ internal static class UnitAliases
         Add(Units.Volume.CubicMeter, "cubicmeter", "cubicmeters", "cubicmetre", "cubicmetres");
 
         // Area
-        Add(Units.Area.SquareMillimeter, "squaremillimeter", "squaremillimeters",
-            "squaremillimetre", "squaremillimetres");
-        Add(Units.Area.SquareCentimeter, "squarecentimeter", "squarecentimeters",
-            "squarecentimetre", "squarecentimetres");
-        Add(Units.Area.SquareMeter, "squaremeter", "squaremeters",
-            "squaremetre", "squaremetres");
+        Add(
+            Units.Area.SquareMillimeter,
+            "squaremillimeter",
+            "squaremillimeters",
+            "squaremillimetre",
+            "squaremillimetres"
+        );
+        Add(
+            Units.Area.SquareCentimeter,
+            "squarecentimeter",
+            "squarecentimeters",
+            "squarecentimetre",
+            "squarecentimetres"
+        );
+        Add(Units.Area.SquareMeter, "squaremeter", "squaremeters", "squaremetre", "squaremetres");
         Add(Units.Area.Hectare, "hectare", "hectares");
-        Add(Units.Area.SquareKilometer, "squarekilometer", "squarekilometers",
-            "squarekilometre", "squarekilometres");
+        Add(
+            Units.Area.SquareKilometer,
+            "squarekilometer",
+            "squarekilometers",
+            "squarekilometre",
+            "squarekilometres"
+        );
 
         // Temperature
-        Add(Units.Temperature.Celsius, "c", "celsius", "centigrade", "°c",
-            "degreecelsius", "degreescelsius");
-        Add(Units.Temperature.Fahrenheit, "f", "fahrenheit", "°f",
-            "degreefahrenheit", "degreesfahrenheit");
+        Add(
+            Units.Temperature.Celsius,
+            "c",
+            "celsius",
+            "centigrade",
+            "°c",
+            "degreecelsius",
+            "degreescelsius"
+        );
+        Add(
+            Units.Temperature.Fahrenheit,
+            "f",
+            "fahrenheit",
+            "°f",
+            "degreefahrenheit",
+            "degreesfahrenheit"
+        );
         Add(Units.Temperature.Kelvin, "k", "kelvin");
 
         // Speed
-        Add(Units.Speed.MeterPerSecond, "mps",
-            "meterpersecond", "meterspersecond");
-        Add(Units.Speed.KilometerPerHour, "kmh", "kph",
-            "kilometerperhour", "kilometersperhour",
-            "kilometreperhour", "kilometresperhour");
-        Add(Units.Speed.MilePerHour,
-            "mileperhour", "milesperhour");
+        Add(Units.Speed.MeterPerSecond, "mps", "meterpersecond", "meterspersecond");
+        Add(
+            Units.Speed.KilometerPerHour,
+            "kmh",
+            "kph",
+            "kilometerperhour",
+            "kilometersperhour",
+            "kilometreperhour",
+            "kilometresperhour"
+        );
+        Add(Units.Speed.MilePerHour, "mileperhour", "milesperhour");
         Add(Units.Speed.Knot, "knot", "knots", "kt");
-        Add(Units.Speed.FootPerSecond, "fps",
-            "footpersecond", "feetpersecond");
+        Add(Units.Speed.FootPerSecond, "fps", "footpersecond", "feetpersecond");
 
         // Energy
         Add(Units.Energy.Joule, "joule", "joules");

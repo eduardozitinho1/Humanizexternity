@@ -12,6 +12,7 @@ public static partial class Units
     private static readonly Unit[] AllUnits =
     [
         .. Data.All,
+        .. Bits.All,
         .. Mass.All,
         .. Length.All,
         .. Time.All,

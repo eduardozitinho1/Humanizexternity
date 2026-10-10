@@ -43,4 +43,7 @@ public enum Dimension
 
     /// <summary>Angle. Base unit: radian.</summary>
     Angle,
+
+    /// <summary>Digital information measured in bits. Base unit: bit. Uses 1000-based scaling (SI).</summary>
+    Bits,
 }
