@@ -40,12 +40,16 @@ public class OrdinalTests
     [InlineData(101, "one hundred first")]
     [InlineData(121, "one hundred twenty-first")]
     [InlineData(999, "nine hundred ninety-ninth")]
+    [InlineData(1000, "one thousandth")]
+    [InlineData(1234, "one thousand two hundred thirty-fourth")]
+    [InlineData(2000, "two thousandth")]
+    [InlineData(9999, "nine thousand nine hundred ninety-ninth")]
     public void Ordinal_word(long value, string expected) =>
         Assert.Equal(expected, H.OrdinalWord(value));
 
     [Fact]
-    public void OrdinalWord_throws_above_999() =>
-        Assert.Throws<ArgumentOutOfRangeException>(() => H.OrdinalWord(1000));
+    public void OrdinalWord_throws_above_9999() =>
+        Assert.Throws<ArgumentOutOfRangeException>(() => H.OrdinalWord(10000));
 
     [Fact]
     public void OrdinalWord_throws_for_negative() =>

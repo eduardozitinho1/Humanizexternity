@@ -1,5 +1,7 @@
 namespace H13y;
 
+using System.Globalization;
+
 public static partial class H
 {
     /// <summary>
@@ -12,9 +14,20 @@ public static partial class H
     /// <summary>
     /// Formats an integer as an ordinal word: 1 becomes "first",
     /// 21 becomes "twenty-first", 100 becomes "one hundredth".
-    /// Supports values in 0..999.
+    /// Supports values in 0..9999.
     /// </summary>
     public static string OrdinalWord(long value) => OrdinalFormatter.Word(value);
+
+    /// <summary>
+    /// Parses an ordinal string back to its integer value: "1st" becomes 1,
+    /// "22nd" becomes 22, "103rd" becomes 103. Returns false on malformed input
+    /// or when the suffix does not match the number.
+    /// </summary>
+    public static bool TryParseOrdinal(
+        string text,
+        out long value,
+        HumanizeOptions? options = null
+    ) => OrdinalFormatter.TryParse(text, out value, options);
 }
 
 internal static class OrdinalFormatter
@@ -106,18 +119,57 @@ internal static class OrdinalFormatter
     public static string Format(long value, HumanizeOptions? options = null)
     {
         var opts = options ?? HumanizeOptions.Default;
+        return value.ToString(opts.Culture) + SuffixFor(value);
+    }
+
+    public static string SuffixFor(long value)
+    {
         var abs = Math.Abs(value);
         var mod100 = abs % 100;
         var mod10 = abs % 10;
 
-        var suffix =
-            mod100 is >= 11 and <= 13 ? "th"
+        return mod100 is >= 11 and <= 13 ? "th"
             : mod10 == 1 ? "st"
             : mod10 == 2 ? "nd"
             : mod10 == 3 ? "rd"
             : "th";
+    }
 
-        return value.ToString(opts.Culture) + suffix;
+    public static bool TryParse(string text, out long value, HumanizeOptions? options)
+    {
+        value = 0;
+        if (string.IsNullOrWhiteSpace(text))
+            return false;
+
+        var trimmed = text.Trim();
+        var opts = options ?? HumanizeOptions.Default;
+
+        string? matched = null;
+        foreach (var s in new[] { "st", "nd", "rd", "th" })
+        {
+            if (trimmed.EndsWith(s, StringComparison.OrdinalIgnoreCase))
+            {
+                matched = s;
+                break;
+            }
+        }
+
+        if (matched is null)
+            return false;
+
+        var numberPart = trimmed[..^matched.Length].Trim();
+        if (numberPart.Length == 0)
+            return false;
+
+        if (!long.TryParse(numberPart, NumberStyles.Integer, opts.Culture, out var parsed))
+            return false;
+
+        var expected = SuffixFor(parsed);
+        if (!string.Equals(matched, expected, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        value = parsed;
+        return true;
     }
 
     public static string Word(long value)
@@ -129,13 +181,28 @@ internal static class OrdinalFormatter
                 "Ordinal words do not support negative values."
             );
 
-        if (value > 999)
+        if (value > 9999)
             throw new ArgumentOutOfRangeException(
                 nameof(value),
                 value,
-                "Ordinal words support values in 0..999."
+                "Ordinal words support values in 0..9999."
             );
 
+        if (value < 1000)
+            return WordBelow1000(value);
+
+        var thousands = value / 1000;
+        var rest = value % 1000;
+        var thousandsWord = Ones[thousands] + " thousand";
+
+        if (rest == 0)
+            return thousandsWord + "th";
+
+        return thousandsWord + " " + WordBelow1000(rest);
+    }
+
+    private static string WordBelow1000(long value)
+    {
         if (value == 0)
             return "zeroth";
         if (value < 10)
@@ -152,6 +219,6 @@ internal static class OrdinalFormatter
         var hundreds = value / 100;
         var rest = value % 100;
         var prefix = $"{Ones[hundreds]} hundred";
-        return rest == 0 ? $"{prefix}th" : $"{prefix} {Word(rest)}";
+        return rest == 0 ? $"{prefix}th" : $"{prefix} {WordBelow1000(rest)}";
     }
 }
