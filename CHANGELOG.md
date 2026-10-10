@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0] - 2026-10-10
+
+### Added
+- add ParseDetailed for categorized parse failures
+- add UnitRegistry for domain-specific custom units
+- add H.Range, H.Uncertainty, and H.Between
+
 ## [1.6.0] - 2026-10-10
 
 ### Added
