@@ -44,6 +44,9 @@ H.CompactWords(1_500_000);        // "1.5 million"
 H.Ordinal(22);                    // "22nd"
 H.OrdinalWord(22);                // "twenty-second"
 H.Roman(2024);                    // "MMXXIV"
+H.Word(22);                       // "twenty-two"
+H.Word(1234);                     // "one thousand two hundred thirty-four"
+H.TryParseWord("twenty-two", out var n); // n = 22
 ```
 
 ## Supported dimensions

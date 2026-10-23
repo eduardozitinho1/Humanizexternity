@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.9.0] - 2026-10-23
+
+### Added
+- `H.Word(long)` for spelling numbers out in English: `H.Word(22)` becomes
+  `"twenty-two"`, `H.Word(1234)` becomes `"one thousand two hundred thirty-four"`,
+  `H.Word(-15)` becomes `"minus fifteen"`. Complements `H.OrdinalWord`, which
+  spells ordinals. Supports values in `-999,999,999,999,999..999,999,999,999,999`
+  (up to trillions).
+- `H.TryParseWord(string, out long)` for parsing English number words back:
+  `"twenty-two"` becomes `22`, `"one hundred twenty-two"` becomes `122`,
+  `"two million"` becomes `2_000_000`. Accepts tens and ones separated by a
+  hyphen or a space, ignores `"and"` (as in `"one hundred and twenty-two"`),
+  and handles `"minus"`/`"negative"` prefixes for negative values.
+- `H.MaxWordValue` and `H.MinWordValue` constants exposing the supported range.
+
+### Changed
+- Package metadata now includes `<PackageProjectUrl>` pointing to the
+  developer's portfolio.
+
 ## [1.8.0] - 2026-10-10
 
 ### Added
