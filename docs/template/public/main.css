@@ -1,0 +1,18 @@
+:root {
+    --bs-link-color-rgb: 224, 108, 74;
+    --bs-link-hover-color-rgb: 241, 126, 88;
+    --bs-body-bg: #0a0907;
+    --bs-body-color: #f1ebe0;
+}
+
+.navbar {
+    background-color: #0a0907 !important;
+    border-bottom: 1px solid #262019;
+}
+
+h1,
+h2,
+h3 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+}
