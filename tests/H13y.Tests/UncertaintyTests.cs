@@ -18,13 +18,9 @@ public class UncertaintyTests
 
     [Fact]
     public void Uncertainty_negative_throws() =>
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-            H.Uncertainty(100, -1, Dimension.Mass)
-        );
+        Assert.Throws<ArgumentOutOfRangeException>(() => H.Uncertainty(100, -1, Dimension.Mass));
 
     [Fact]
     public void Uncertainty_temperature_throws() =>
-        Assert.Throws<ArgumentException>(() =>
-            H.Uncertainty(300, 5, Dimension.Temperature)
-        );
+        Assert.Throws<ArgumentException>(() => H.Uncertainty(300, 5, Dimension.Temperature));
 }

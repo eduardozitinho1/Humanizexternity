@@ -73,7 +73,5 @@ public class UnitRegistryTests
 
     [Fact]
     public void Empty_symbol_throws() =>
-        Assert.Throws<ArgumentException>(() =>
-            new UnitRegistry().Register("", 1, Dimension.Mass)
-        );
+        Assert.Throws<ArgumentException>(() => new UnitRegistry().Register("", 1, Dimension.Mass));
 }

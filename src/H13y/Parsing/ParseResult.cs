@@ -43,8 +43,7 @@ public readonly record struct ParseResult(
 )
 {
     /// <summary>Creates a success result.</summary>
-    public static ParseResult Ok(Measure measure) =>
-        new(true, measure, ParseErrorKind.None, null);
+    public static ParseResult Ok(Measure measure) => new(true, measure, ParseErrorKind.None, null);
 
     /// <summary>Creates a failure result.</summary>
     public static ParseResult Fail(ParseErrorKind kind, string message) =>

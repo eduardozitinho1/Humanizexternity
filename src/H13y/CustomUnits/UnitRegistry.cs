@@ -38,7 +38,11 @@ public sealed class UnitRegistry
         if (string.IsNullOrWhiteSpace(symbol))
             throw new ArgumentException("Symbol must not be empty.", nameof(symbol));
         if (factor <= 0)
-            throw new ArgumentOutOfRangeException(nameof(factor), factor, "Factor must be positive.");
+            throw new ArgumentOutOfRangeException(
+                nameof(factor),
+                factor,
+                "Factor must be positive."
+            );
 
         var unit = new Unit(symbol, factor, dimension, 0, iecSymbol);
         _units[symbol] = unit;
@@ -77,8 +81,7 @@ public sealed class UnitRegistry
     public void Clear() => _units.Clear();
 
     /// <summary>Lists every registered custom unit. Useful for diagnostics.</summary>
-    public IReadOnlyCollection<Unit> All =>
-        _units.Values.Distinct().ToArray();
+    public IReadOnlyCollection<Unit> All => _units.Values.Distinct().ToArray();
 }
 
 public static partial class H

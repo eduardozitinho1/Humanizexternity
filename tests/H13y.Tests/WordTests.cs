@@ -86,21 +86,21 @@ public class WordTests
         Assert.Equal(expected, value);
     }
 
-[Theory]
-[InlineData("")]
-[InlineData("   ")]
-[InlineData("hundred")]
-[InlineData("one zero")]
-[InlineData("zero one")]
-[InlineData("twenty-zero")]
-[InlineData("xxx")]
-[InlineData("minus")]
-[InlineData("and")]
-[InlineData("and one")]
-[InlineData("one and and two")]
-[InlineData("twenty-two thousand and")]
-public void TryParseWord_rejects_invalid_input(string text) =>
-    Assert.False(H.TryParseWord(text, out _));
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("hundred")]
+    [InlineData("one zero")]
+    [InlineData("zero one")]
+    [InlineData("twenty-zero")]
+    [InlineData("xxx")]
+    [InlineData("minus")]
+    [InlineData("and")]
+    [InlineData("and one")]
+    [InlineData("one and and two")]
+    [InlineData("twenty-two thousand and")]
+    public void TryParseWord_rejects_invalid_input(string text) =>
+        Assert.False(H.TryParseWord(text, out _));
 
     [Fact]
     public void TryParseWord_rejects_null() => Assert.False(H.TryParseWord(null!, out _));

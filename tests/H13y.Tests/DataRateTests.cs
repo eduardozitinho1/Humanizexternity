@@ -56,16 +56,11 @@ public class DataRateTests
 
     [Fact]
     public void Comparison_orders_by_bps() =>
-        Assert.True(
-            DataRate.FromGigabitsPerSecond(1) > DataRate.FromMegabitsPerSecond(1)
-        );
+        Assert.True(DataRate.FromGigabitsPerSecond(1) > DataRate.FromMegabitsPerSecond(1));
 
     [Fact]
     public void Equality_across_units() =>
-        Assert.Equal(
-            DataRate.FromBitsPerSecond(1_000_000),
-            DataRate.FromMegabitsPerSecond(1)
-        );
+        Assert.Equal(DataRate.FromBitsPerSecond(1_000_000), DataRate.FromMegabitsPerSecond(1));
 
     [Fact]
     public void FullName_uses_rate_names()

@@ -15,10 +15,7 @@ public class RangeDimensionTests
 
     [Fact]
     public void Range_with_dimension_and_to_style() =>
-        Assert.Equal(
-            "500 g to 1.5 kg",
-            H.Range(500, 1500, Dimension.Mass, RangeStyle.To)
-        );
+        Assert.Equal("500 g to 1.5 kg", H.Range(500, 1500, Dimension.Mass, RangeStyle.To));
 
     [Fact]
     public void Range_temperature_throws() =>

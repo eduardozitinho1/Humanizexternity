@@ -44,11 +44,7 @@ public static partial class Units
         public static readonly Unit KilobytePerSecond = new("KB/s", 8_000, Dimension.DataRate);
 
         /// <summary>Megabyte per second — 8,000,000 bits per second.</summary>
-        public static readonly Unit MegabytePerSecond = new(
-            "MB/s",
-            8_000_000,
-            Dimension.DataRate
-        );
+        public static readonly Unit MegabytePerSecond = new("MB/s", 8_000_000, Dimension.DataRate);
 
         /// <summary>Gigabyte per second — 8,000,000,000 bits per second.</summary>
         public static readonly Unit GigabytePerSecond = new(

@@ -15,24 +15,15 @@ public class ApproximateTests
 
     [Fact]
     public void Million_rounds_to_nearest_million() =>
-        Assert.Equal(
-            "about 2 million",
-            H.Approximate(1_500_000, ApproximationPrecision.Million)
-        );
+        Assert.Equal("about 2 million", H.Approximate(1_500_000, ApproximationPrecision.Million));
 
     [Fact]
     public void TenThousand_uses_compact_suffix() =>
-        Assert.Equal(
-            "about 15 thousand",
-            H.Approximate(15_000, ApproximationPrecision.Thousand)
-        );
+        Assert.Equal("about 15 thousand", H.Approximate(15_000, ApproximationPrecision.Thousand));
 
     [Fact]
     public void Negative_values_keep_sign() =>
-        Assert.Equal(
-            "about -1200",
-            H.Approximate(-1234, ApproximationPrecision.Hundred)
-        );
+        Assert.Equal("about -1200", H.Approximate(-1234, ApproximationPrecision.Hundred));
 
     [Fact]
     public void Zero_is_reported_as_zero() =>
@@ -64,11 +55,7 @@ public class ApproximateTests
     public void Approximately_style_changes_prefix() =>
         Assert.Equal(
             "approximately 1200",
-            H.Approximate(
-                1234,
-                ApproximationPrecision.Hundred,
-                ApproximationStyle.Approximately
-            )
+            H.Approximate(1234, ApproximationPrecision.Hundred, ApproximationStyle.Approximately)
         );
 
     [Fact]
@@ -82,9 +69,6 @@ public class ApproximateTests
     public void Culture_is_honored_in_plain_format()
     {
         var opts = new HumanizeOptions { Culture = new CultureInfo("pt-BR") };
-        Assert.Equal(
-            "about 1234,6",
-            H.Approximate(1234.567, ApproximationPrecision.Tenth, opts)
-        );
+        Assert.Equal("about 1234,6", H.Approximate(1234.567, ApproximationPrecision.Tenth, opts));
     }
 }

@@ -74,10 +74,7 @@ public static class UnitParser
         var match = SinglePattern.Match(trimmed);
 
         if (!match.Success)
-            return ParseResult.Fail(
-                ParseErrorKind.InvalidNumber,
-                $"Could not parse '{text}'."
-            );
+            return ParseResult.Fail(ParseErrorKind.InvalidNumber, $"Could not parse '{text}'.");
 
         var valueText = match.Groups["value"].Value;
 
@@ -105,10 +102,7 @@ public static class UnitParser
         var unit = UnitAliases.Resolve(symbol);
 
         if (unit is null)
-            return ParseResult.Fail(
-                ParseErrorKind.UnknownUnit,
-                $"Unknown unit '{symbol}'."
-            );
+            return ParseResult.Fail(ParseErrorKind.UnknownUnit, $"Unknown unit '{symbol}'.");
 
         return ParseResult.Ok(new Measure(value, unit));
     }

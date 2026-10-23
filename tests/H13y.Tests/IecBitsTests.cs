@@ -47,9 +47,5 @@ public class IecBitsTests
 
     [Fact]
     public void Convert_kibibit_to_kilobit() =>
-        Assert.Equal(
-            1.024,
-            H.Convert(1, Units.Bits.Kibibit, Units.Bits.Kilobit),
-            precision: 6
-        );
+        Assert.Equal(1.024, H.Convert(1, Units.Bits.Kibibit, Units.Bits.Kilobit), precision: 6);
 }

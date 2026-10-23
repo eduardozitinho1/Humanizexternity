@@ -91,12 +91,7 @@ public static partial class H
 
 internal static class RangeFormatter
 {
-    public static string Format(
-        double from,
-        double to,
-        RangeStyle style,
-        HumanizeOptions? options
-    )
+    public static string Format(double from, double to, RangeStyle style, HumanizeOptions? options)
     {
         var opts = options ?? HumanizeOptions.Default;
         var fromText = NumberFormatter.Format(from, opts.MaxDecimals, opts.Culture);

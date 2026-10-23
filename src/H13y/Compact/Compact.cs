@@ -69,11 +69,7 @@ internal static class CompactFormatter
         ("trillion", 1e12),
     ];
 
-    public static string Format(
-        double value,
-        CompactStyle style,
-        HumanizeOptions? options = null
-    )
+    public static string Format(double value, CompactStyle style, HumanizeOptions? options = null)
     {
         if (double.IsNaN(value))
             return "NaN";
