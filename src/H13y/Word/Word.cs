@@ -44,7 +44,7 @@ public static partial class H
 
 internal static class WordFormatter
 {
-    private static readonly string[] Ones =
+    internal static readonly string[] Ones =
     [
         "zero",
         "one",

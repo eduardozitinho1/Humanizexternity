@@ -6,6 +6,17 @@
 - Package now targets `net8.0` in addition to `net10.0`. No API changes;
   existing consumers on .NET 10 are unaffected. New consumers on .NET 8 LTS
   can now install the package.
+- `H.Word(decimal)` and `H.Word(double)` for spelling decimal numbers:
+  `H.Word(22.5)` becomes `"twenty-two point five"`, `H.Word(-0.75)` becomes
+  `"minus zero point seven five"`. Fractional digits are spelled individually
+  ("three point one four", not "three point fourteen"), matching standard
+  English pronunciation.
+- `H.Word(double, int maxDecimals)` to control rounding before formatting.
+  The default is 10 decimals, so `H.Word(0.1 + 0.2)` returns
+  `"zero point three"` instead of a floating-point artifact.
+- `H.TryParseDecimalWord(string, out decimal)` for parsing decimal number
+  words back: `"twenty-two point five"` becomes `22.5m`. Round-trips cleanly
+  with `H.Word(decimal)`.
 
 ## [1.9.0] - 2026-10-23
 

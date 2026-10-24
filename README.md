@@ -45,6 +45,10 @@ H.Ordinal(22);                    // "22nd"
 H.OrdinalWord(22);                // "twenty-second"
 H.Roman(2024);                    // "MMXXIV"
 H.Word(22);                       // "twenty-two"
+H.Word(22.5);                     // "twenty-two point five"
+H.Word(3.14);                     // "three point one four"
+H.Word(-0.75);                    // "minus zero point seven five"
+H.TryParseDecimalWord("twenty-two point five", out var d); // d = 22.5m
 H.Word(1234);                     // "one thousand two hundred thirty-four"
 H.TryParseWord("twenty-two", out var n); // n = 22
 ```
