@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.11.1] – 2026-10-24
+
+### Added
+- `H.Pluralize` / `H.Singularize` for English nouns, covering regular rules,
+  irregulars (person→people, child→children), Latin/Greek roots, and
+  uncountables (sheep, fish, series).
+- `H.IsPlural` / `H.IsSingular` for detecting number on a word.
+- Case converters: `H.SnakeCase`, `H.KebabCase`, `H.CamelCase`,
+  `H.PascalCase`, `H.TitleCase`, `H.UpperSnakeCase`, `H.Humanize`.
+- `ILanguageProvider` interface plus built-in English and Portuguese
+  (pt-BR) providers.
+- `H.Word(long, string culture)` — number-to-words **in multiple languages**.
+  `H.Word(22, "pt-BR")` returns `"vinte e dois"`. Humanizer has no equivalent.
+- `H.OrdinalWord(long, string culture)` — spelled ordinals per culture.
+  `H.OrdinalWord(22, "pt-BR")` returns `"vigésimo segundo"`.
+- `H.Ordinal(long, string culture)` — culture-aware ordinal suffix (`22nd` / `22º`).
+- `H.Month(int, string)` and `H.DayOfWeek(DayOfWeek, string)` — calendar
+  names per culture.
+- `Language.Register(ILanguageProvider)` — plug in your own culture.
+
 ## [1.10.0] - 2026-10-24
 
 ### Added

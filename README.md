@@ -254,6 +254,16 @@ dotnet run --project benchmarks/H13y.Benchmarks -c Release
 The benchmark project is intentionally kept out of the solution so `dotnet build`
 and `dotnet test` on the repo stay fast.
 
+## How this compares to Humanizer
+
+| Feature | Humanizer | Humanizexternity |
+|---|---|---|
+| Pluralization (English) | ✓ | ✓ |
+| Case conversion | ✓ | ✓ |
+| Number-to-words | ✗ | ✓ English + Portuguese |
+| Ordinals as words (per culture) | ✗ | ✓ |
+| Plug-in languages | Complex | `ILanguageProvider` (1 interface) |
+
 ## License
 
 MIT
