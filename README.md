@@ -7,7 +7,7 @@
 
 Humanize any measure. `1024 MB` → `1 GB`. `1500 g` → `1.5 kg`. `3661 s` → `1 h 1 min 1 s`. `120 km/h` stays `120 km/h`. `3.6 MJ` → `1 kWh`.
 
-A small C# library for turning raw numeric values into compact, human-readable strings, and for parsing those strings back into structured values. Built for .NET 10.
+A small C# library for turning raw numeric values into compact, human-readable strings, and for parsing those strings back into structured values. Runs on **.NET 8** and **.NET 10**.
 
 ## Install
 

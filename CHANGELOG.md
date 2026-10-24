@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0] - 2026-10-24
+
+### Added
+- Package now targets `net8.0` in addition to `net10.0`. No API changes;
+  existing consumers on .NET 10 are unaffected. New consumers on .NET 8 LTS
+  can now install the package.
+
 ## [1.9.0] - 2026-10-23
 
 ### Added
