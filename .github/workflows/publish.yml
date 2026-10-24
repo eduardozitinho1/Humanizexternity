@@ -41,7 +41,7 @@ jobs:
         run: dotnet pack src/H13y/H13y.csproj --no-build -c Release -p:Version=${{ steps.version.outputs.VERSION }} -o ./artifacts
 
       - name: NuGet login (OIDC)
-        uses: NuGet/login@v1
+        uses: NuGet/login@ebc737b6fc418a6ca0073cf116ec8dc156d8b81e # v1
         id: login
         with:
           user: eduardozitinho
@@ -53,7 +53,7 @@ jobs:
         run: dotnet nuget push ./artifacts/*.snupkg --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           files: ./artifacts/*.nupkg
           generate_release_notes: true
