@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.11.0] - 2026-10-24
+
+### Fixed
+- resolve CS0120 and CA1304 in language providers
+
 ## [1.11.1] – 2026-10-24
 
 ### Added
