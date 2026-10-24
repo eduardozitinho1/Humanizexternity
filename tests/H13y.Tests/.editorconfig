@@ -2,3 +2,5 @@ root = false
 
 [*.cs]
 dotnet_diagnostic.CA1707.severity = none
+
+dotnet_diagnostic.CA1304.severity = none

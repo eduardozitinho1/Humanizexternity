@@ -16,11 +16,11 @@ internal sealed class EnglishLanguage : ILanguageProvider
         "Thursday", "Friday", "Saturday",
     ];
 
-    public string Word(long value) => H.Word(value);
+    public string Word(long value) => WordFormatter.Format(value);
 
-    public string Ordinal(long value) => H.Ordinal(value);
+    public string Ordinal(long value) => OrdinalFormatter.Format(value);
 
-    public string OrdinalWord(long value) => H.OrdinalWord(value);
+    public string OrdinalWord(long value) => OrdinalFormatter.Word(value);
 
     public string Month(int month) =>
         month is < 1 or > 12

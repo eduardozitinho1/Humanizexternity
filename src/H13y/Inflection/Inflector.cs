@@ -33,6 +33,7 @@ internal static class Inflector
         ["child"] = "children", ["tooth"] = "teeth", ["foot"] = "feet",
         ["goose"] = "geese", ["mouse"] = "mice", ["louse"] = "lice",
         ["ox"] = "oxen", ["die"] = "dice",
+        ["leaf"] = "leaves", ["loaf"] = "loaves", ["thief"] = "thieves", ["hoof"] = "hooves",
         ["criterion"] = "criteria", ["phenomenon"] = "phenomena",
         ["datum"] = "data", ["medium"] = "media", ["bacterium"] = "bacteria",
         ["curriculum"] = "curricula", ["cactus"] = "cacti", ["focus"] = "foci",

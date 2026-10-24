@@ -84,11 +84,11 @@ internal sealed class PortugueseLanguage : ILanguageProvider
         return WordBelowThousand(value);
     }
 
-    private static string BuildRest(long rest)
+    private string BuildRest(long rest)
     {
         if (rest == 0)
             return string.Empty;
-        return (rest < 100 || rest % 100 == 0 ? " e " : " ") + WordBelowThousand(rest);
+        return (rest < 100 || rest % 100 == 0 ? " e " : " ") + Word(rest);
     }
 
     private static string WordBelowThousand(long value)
@@ -132,7 +132,7 @@ internal sealed class PortugueseLanguage : ILanguageProvider
         return OrdinalWordRecursive(value).Trim();
     }
 
-    private static string OrdinalWordRecursive(long value)
+    private string OrdinalWordRecursive(long value)
     {
         var parts = new List<string>();
 
@@ -153,7 +153,7 @@ internal sealed class PortugueseLanguage : ILanguageProvider
         if (value >= 1000)
         {
             var thousands = value / 1000;
-            parts.Add(Word(thousands) + (thousands == 1 ? " milésimo" : " milésimos"));
+            parts.Add(thousands == 1 ? "milésimo" : Word(thousands) + " milésimos");
             value %= 1000;
         }
 
